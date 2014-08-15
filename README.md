@@ -24,5 +24,6 @@ sequence(1,2,3).head # eagerly returns 1
 Naturally you can combine these operations together:
 
 ```ruby
-option(1).join(sequence(2,3,4)).join(sequence(5,6)).filter{|i| i.odd?}.take(2) # lazily returns 1,3
+option(1).join(sequence(2,3,4)).join(sequence(5,6)).filter{|i| i.odd?}.take(2) 
+# lazily returns 1,3
 ```
