@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "totally_lazy"
   gem.homepage = "http://github.com/kingsleyh/totally_lazy"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Port of java functional library totally lazy to ruby}
+  gem.description = %Q{Port of java functional library totally lazy to ruby}
   gem.email = "kingsleyhendrickse@me.com"
   gem.authors = ["Kingsley Hendrickse"]
   # dependencies defined in Gemfile
