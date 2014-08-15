@@ -34,7 +34,7 @@ sequence(1,2,3).drop(2) # lazily returns 3
 sequence(1,2,3).tail # lazily returns 2,3
 sequence(1,2,3).head # eagerly returns 1
 sequence(1,2,3).head_option # eagerly returns an option
-some(sequence(1,2,3)).get_or_else(empty) # eagerly returns the option value or else empty sequence
+some(sequence(1,2,3)).get_or_else(empty) # eagerly returns value or else empty sequence
 ```
 
 Naturally you can combine these operations together:
