@@ -19,7 +19,7 @@ In your bundler Gemfile
 Or with rubygems
 
 ```
- gem install totall_lazy
+ gem install totally_lazy
 ```
 
 ### Examples
