@@ -1,5 +1,3 @@
-require_relative 'option'
-
 class NoSuchElementException < RuntimeError
 end
 
@@ -15,7 +13,13 @@ module Sequences
 
   def sequence(*items)
     if items.size == 1
-      items.first.kind_of?(Range) ? Sequence.new(items.first) : Sequence.new(items)
+      if items.first.kind_of?(Range)
+        Sequence.new(items.first)
+      elsif items.first.kind_of?(Hash)
+        Sequence.new(items.first)
+      else
+        Sequence.new(items)
+      end
     else
       Sequence.new(items)
     end
@@ -28,7 +32,6 @@ module Sequences
   class Sequence < Enumerator
 
     include Comparable
-    include Option
 
     def initialize(obj, &block)
       super() { |yielder|
@@ -66,6 +69,7 @@ module Sequences
     end
 
     alias find_all select
+    alias filter select
 
     def reject(&block)
       Sequence.new(self) { |yielder, val|
@@ -154,27 +158,29 @@ module Sequences
       }
     end
 
+    def [](n)
+      Sequence.new(self).entries[n]
+    end
+
+    alias get []
+
     def empty?
-      self.next.kind_of?(Empty)
+      sequence.next.kind_of?(Empty)
     end
 
     def head
-      sequence = Sequence.new(self)
       sequence.empty? ? raise(NoSuchElementException.new, 'The sequence was empty') : sequence.first
     end
 
     def head_option
-      sequence = Sequence.new(self)
       sequence.empty? ? none : some(sequence.first)
     end
 
     def last
-      sequence = Sequence.new(self)
       sequence.empty? ? raise(NoSuchElementException.new, 'The sequence was empty') : sequence.entries.last
     end
 
     def last_option
-      sequence = Sequence.new(self)
       sequence.empty? ? none : some(sequence.entries.last)
     end
 
@@ -210,12 +216,32 @@ module Sequences
       end)
     end
 
+    def join(target_sequence)
+      Sequence.new(Sequence::Generator.new do |g|
+        raise(Exception.new, 'The target (right side) must be a sequence') unless target_sequence.kind_of?(Sequences::Sequence)
+        (self.entries << target_sequence.entries).flatten.each{|i| g.yield i}
+      end)
+    end
+    alias + join
+    alias << join
+
+    private
+    def sequence
+      Sequence.new(self)
+    end
+
   end
 
 end
 
-# include Sequences
-# p sequence([1, 2, 3], [4, 5, 6,7]).transpose.entries
+
+
+
+
+
+
+
+
 
 
 

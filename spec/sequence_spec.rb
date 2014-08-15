@@ -1,10 +1,7 @@
 require 'rspec'
-require_relative '../lib/sequence'
+require_relative '../lib/totally_lazy'
 
 describe 'Sequence' do
-
-  include Sequences
-  include Option
 
   it 'should create empty sequence when iterable is nil' do
     expect(sequence(nil)).to eq(empty)
