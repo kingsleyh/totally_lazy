@@ -13,13 +13,7 @@ module Sequences
 
   def sequence(*items)
     if items.size == 1
-      if items.first.kind_of?(Range)
-        Sequence.new(items.first)
-      elsif items.first.kind_of?(Hash)
-        Sequence.new(items.first)
-      else
-        Sequence.new(items)
-      end
+      [Range, Hash].include?(items.first.class) ? Sequence.new(items.first) : Sequence.new(items)
     else
       Sequence.new(items)
     end
@@ -219,9 +213,10 @@ module Sequences
     def join(target_sequence)
       Sequence.new(Sequence::Generator.new do |g|
         raise(Exception.new, 'The target (right side) must be a sequence') unless target_sequence.kind_of?(Sequences::Sequence)
-        (self.entries << target_sequence.entries).flatten.each{|i| g.yield i}
+        (self.entries << target_sequence.entries).flatten.each { |i| g.yield i }
       end)
     end
+
     alias + join
     alias << join
 

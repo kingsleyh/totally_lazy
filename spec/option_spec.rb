@@ -26,7 +26,8 @@ describe 'Option' do
   end
 
   it 'should not get value of none' do
-
+    pending('not get none')
+    pass
   end
 
   it 'should get or else' do
