@@ -46,11 +46,11 @@ module Option
     end
 
     def get_or_nil
-      @content
+      blank? ? nil : @content
     end
 
     def get_or_throw(exception)
-      blank? ? @content : exception.call
+      blank? ? raise(exception) : @content
     end
 
     def to_seq
@@ -79,7 +79,7 @@ module Option
     private
 
     def blank?
-      @content.nil? || @content.empty?
+      @content.respond_to?(:empty?) ? empty? : !self
     end
 
   end
