@@ -8,6 +8,20 @@ This is a port of the java functional library [Totally Lazy](https://code.google
 * Supports method chaining
 * Is primarily based on ruby Enumerators
 
+### Install
+
+In your bundler Gemfile
+
+```ruby
+ gem totally_lazy, '~>0.0.1' 
+```
+
+Or with rubygems
+
+```
+ gem install totall_lazy
+```
+
 ### Examples
 
 The following are some simple examples of the currently implemented functionality.
