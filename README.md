@@ -27,6 +27,8 @@ Or with rubygems
 The following are some simple examples of the currently implemented functionality.
 
 ```ruby
+require 'totally_lazy'
+
 sequence(1,2,3,4).filter{|i| i.even? } # lazily returns 2,4
 sequence(1,2).map{|i| i.to_s} # lazily returns "1","2"
 sequence(1,2,3).take(2) # lazily returns 1,2
