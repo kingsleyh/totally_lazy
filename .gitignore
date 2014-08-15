@@ -2,6 +2,10 @@
 coverage
 coverage.data
 
+.idea
+rspec_html_reports
+*.lock
+
 # rdoc generated
 rdoc
 
