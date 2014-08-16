@@ -1,26 +1,22 @@
 class NoSuchElementException < RuntimeError
 end
 
-class Empty
-
-  def each
-    yield self
-  end
-
-end
-
 module Sequences
 
   def sequence(*items)
     if items.size == 1
-      [Range, Hash].include?(items.first.class) ? Sequence.new(items.first) : Sequence.new(items)
+      if [Range, Hash].include?(items.first.class)
+        Sequence.new(items.first)
+      elsif items.first.nil?
+        empty
+      end
     else
       Sequence.new(items)
     end
   end
 
   def empty
-    sequence(Empty.new)
+    Empty.new
   end
 
   class Sequence < Enumerator
@@ -43,7 +39,7 @@ module Sequences
     end
 
     def <=>(object)
-      self.class <=> object.class
+      self.entries <=> object.entries
     end
 
     def map(&block)
@@ -159,7 +155,11 @@ module Sequences
     alias get []
 
     def empty?
-      sequence.next.kind_of?(Empty)
+      begin
+        sequence.peek_values.empty?
+      rescue StopIteration
+        true
+      end
     end
 
     def head
@@ -200,25 +200,63 @@ module Sequences
     def transpose
       Sequence.new(Sequence::Generator.new do |g|
         result = []
-        max_size = self.entries.max { |a, b| a.size <=> b.size }.size
+        max_size = self.to_a.max { |a, b| a.size <=> b.size }.size
         max_size.times do |i|
-          result[i] = [self.entries.first.size]
-          self.entries.each_with_index { |r, j| result[i][j] = r[i] }
+          result[i] = [self.to_a.first.size]
+          self.to_a.each_with_index { |r, j| result[i][j] = r[i] }
         end
         result
-        self.empty? ? raise(NoSuchElementException.new, 'The sequence was empty') : result.each { |i| g.yield i }
+        if self.empty?
+          raise(NoSuchElementException.new, 'The sequence was empty')
+        else
+          raise(Exception.new, 'The subject of transposition must be multidimensional') unless self.to_a.first.is_a?(Array)
+        end
+        result.each { |i| g.yield i }
       end)
     end
 
     def join(target_sequence)
       Sequence.new(Sequence::Generator.new do |g|
         raise(Exception.new, 'The target (right side) must be a sequence') unless target_sequence.kind_of?(Sequences::Sequence)
-        (self.entries << target_sequence.entries).flatten.each { |i| g.yield i }
+        elements = self.entries
+        elements = elements.reject { |i| i.is_a?(Empty) }
+        (elements << target_sequence.entries).flatten.each { |i| g.yield i }
       end)
     end
 
     alias + join
     alias << join
+
+    def append(item)
+      Sequence.new(Sequence::Generator.new do |g|
+        elements = self.entries
+        elements = elements.reject { |i| i.is_a?(Empty) }
+        (elements << item).each { |i| g.yield i }
+      end)
+    end
+
+    def to_a
+      execution = {
+        Sequences::Sequence => ->{ self.entries.map { |s| s.entries } },
+        Pair::Pair => ->{self.entries.map{|pair| pair.to_map}}
+      }
+      if self.empty?
+        self.entries
+      else
+
+
+        # self.entries.each do |entry|
+        #   list << execution[entry.class].nil? ? entry : execution[entry.class].call
+        # end
+
+        first_item = self.peek_values.first.class
+        execution[first_item].nil? ? self.entries : execution[first_item].call
+      end
+    end
+
+    def all
+      to_a.flatten
+    end
 
     private
     def sequence
@@ -227,7 +265,28 @@ module Sequences
 
   end
 
+  class Empty < Sequence
+
+    def initialize(obj=[], &block)
+      super(obj) { |yielder|
+        begin
+          obj.each { |x|
+            if block
+              block.call(yielder, x)
+            else
+              yielder << x
+            end
+          }
+        rescue StopIteration
+        end
+      }
+    end
+
+  end
+
 end
+
+
 
 
 

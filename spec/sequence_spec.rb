@@ -46,5 +46,10 @@ describe 'Sequence' do
     expect { empty.shuffle.first }.to raise_error(NoSuchElementException)
   end
 
+  it 'should lazily join sequences together' do
+    expect(sequence(1,2,3).join(sequence(4,5,6))).to eq(sequence(1,2,3,4,5,6))
+    expect(empty.join(sequence(1,2))).to eq(sequence(1,2))
+  end
+
 
 end
