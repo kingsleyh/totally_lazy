@@ -243,8 +243,15 @@ module Sequences
       end)
     end
 
-    alias + join
     alias << join
+
+    def add(target_sequence)
+      Sequence.new(Sequence::Generator.new do |g|
+        (self.entries + target_sequence.entries).each { |i| g.yield i }
+      end)
+    end
+
+    alias + add
 
     def append(item)
       Sequence.new(Sequence::Generator.new do |g|
@@ -262,7 +269,7 @@ module Sequences
 
     def from_pairs
       Sequence.new(Sequence::Generator.new do |g|
-        self.entries.map { |e| Type.check(e, Pair::Pair); [e.key,e.value] }.flatten.each { |i| g.yield i }
+        self.entries.map { |e| Type.check(e, Pair::Pair); [e.key, e.value] }.flatten.each { |i| g.yield i }
       end)
     end
 
@@ -275,11 +282,6 @@ module Sequences
         self.entries
       else
 
-
-        # self.entries.each do |entry|
-        #   list << execution[entry.class].nil? ? entry : execution[entry.class].call
-        # end
-
         first_item = self.peek_values.first.class
         execution[first_item].nil? ? self.entries : execution[first_item].call
       end
@@ -289,9 +291,22 @@ module Sequences
       to_a.flatten
     end
 
+    def get_or_else(index, or_else)
+      blank?(sequence[index]) ? or_else : sequence[index]
+    end
+
+    def get_option(index)
+      blank?(sequence[index]) ? none : some(sequence[index])
+    end
+
+
     private
     def sequence
       Sequence.new(self)
+    end
+
+    def blank?(item)
+      item.respond_to?(:empty?) ? item.empty? : !item
     end
 
   end
