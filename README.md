@@ -13,7 +13,7 @@ This is a port of the java functional library [Totally Lazy](https://code.google
 In your bundler Gemfile
 
 ```ruby
- gem totally_lazy, '~>0.0.2' 
+ gem totally_lazy, '~>0.0.3' 
 ```
 
 Or with rubygems
@@ -29,8 +29,8 @@ The following are some simple examples of the currently implemented functionalit
 ```ruby
 require 'totally_lazy'
 
-sequence(1,2,3,4).filter{|i| i.even? } # lazily returns 2,4
-sequence(1,2).map{|i| i.to_s} # lazily returns "1","2"
+sequence(1,2,3,4).filter(even) # lazily returns 2,4
+sequence(1,2).map(to_string) # lazily returns "1","2"
 sequence(1,2,3).take(2) # lazily returns 1,2
 sequence(1,2,3).drop(2) # lazily returns 3
 sequence(1,2,3).tail # lazily returns 2,3
