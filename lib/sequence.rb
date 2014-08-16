@@ -1,6 +1,9 @@
 class NoSuchElementException < RuntimeError
 end
 
+class UnsupportedTypeException < RuntimeError
+end
+
 module Sequences
 
   def sequence(*items)
@@ -9,6 +12,8 @@ module Sequences
         Sequence.new(items.first)
       elsif items.first.nil?
         empty
+      else
+        Sequence.new(items)
       end
     else
       Sequence.new(items)
@@ -42,20 +47,34 @@ module Sequences
       self.entries <=> object.entries
     end
 
-    def map(&block)
-      Sequence.new(self) { |yielder, val|
-        yielder << block.call(val)
-      }
+    def map(predicate=nil, &block)
+      if predicate
+        Sequence.new(self) { |yielder, val|
+          v = predicate.call(val)
+          yielder << v unless v.nil?
+        }
+      else
+        Sequence.new(self) { |yielder, val|
+          yielder << block.call(val)
+        }
+      end
     end
 
     alias collect map
 
-    def select(&block)
-      Sequence.new(self) { |yielder, val|
-        if block.call(val)
-          yielder << val
-        end
-      }
+    def select(predicate=nil, &block)
+      if predicate
+        Sequence.new(self) { |yielder, val|
+          v = predicate.call(val)
+          yielder << v unless v.nil?
+        }
+      else
+        Sequence.new(self) { |yielder, val|
+          if block.call(val)
+            yielder << val
+          end
+        }
+      end
     end
 
     alias find_all select
@@ -235,10 +254,22 @@ module Sequences
       end)
     end
 
+    def to_seq
+      Sequence.new(Sequence::Generator.new do |g|
+        self.entries.map { |e| Type.check(e, Sequences::Sequence); e.entries }.flatten.each { |i| g.yield i }
+      end)
+    end
+
+    def from_pairs
+      Sequence.new(Sequence::Generator.new do |g|
+        self.entries.map { |e| Type.check(e, Pair::Pair); [e.key,e.value] }.flatten.each { |i| g.yield i }
+      end)
+    end
+
     def to_a
       execution = {
-        Sequences::Sequence => ->{ self.entries.map { |s| s.entries } },
-        Pair::Pair => ->{self.entries.map{|pair| pair.to_map}}
+          Sequences::Sequence => -> { self.entries.map { |s| s.entries } },
+          Pair::Pair => -> { self.entries.map { |pair| pair.to_map } }
       }
       if self.empty?
         self.entries

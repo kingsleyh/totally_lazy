@@ -4,7 +4,7 @@ require_relative '../lib/totally_lazy'
 describe 'Option' do
 
   it 'should support contains' do
-    expect(option(1).contains(1)).to be(true)
+    expect(option(1).contains(1)).to eq(true)
   end
 
   it 'should support is alias' do

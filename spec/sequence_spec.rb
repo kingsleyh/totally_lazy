@@ -8,7 +8,7 @@ describe 'Sequence' do
   end
 
   it 'should support transpose' do
-    expect(sequence(sequence(1, 2), sequence(3, 4), sequence(5, 6))).to include(sequence(1, 3, 5), sequence(2, 4, 6))
+    expect(sequence(sequence(1, 2), sequence(3, 4), sequence(5, 6)).transpose).to include(sequence(1, 3, 5), sequence(2, 4, 6))
   end
 
   it 'should eagerly return the first element of a sequence, returns NoSuchElementException if empty' do
