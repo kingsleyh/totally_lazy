@@ -42,6 +42,6 @@ some(sequence(1,2,3)).get_or_else(empty) # eagerly returns value or else empty s
 Naturally you can combine these operations together:
 
 ```ruby
-option(1).join(sequence(2,3,4)).join(sequence(5,6)).filter{|i| i.odd?}.take(2) 
+option(1).join(sequence(2,3,4)).join(sequence(5,6)).filter(odd).take(2) 
 # lazily returns 1,3
 ```
