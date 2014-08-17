@@ -13,7 +13,7 @@ This is a port of the java functional library [Totally Lazy](https://code.google
 In your bundler Gemfile
 
 ```ruby
- gem totally_lazy, '~>0.0.3' 
+ gem totally_lazy, '~>0.0.4' 
 ```
 
 Or with rubygems
