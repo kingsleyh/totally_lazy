@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Kingsley Hendrickse"]
-  s.date = "2014-08-16"
+  s.date = "2014-08-17"
   s.description = "Port of java functional library totally lazy to ruby"
   s.email = "kingsleyhendrickse@me.com"
   s.extra_rdoc_files = [
@@ -32,12 +32,12 @@ Gem::Specification.new do |s|
     "lib/predicates.rb",
     "lib/sequence.rb",
     "lib/totally_lazy.rb",
-    "lib/tuple.rb",
     "lib/type_check.rb",
     "spec/option_spec.rb",
     "spec/pair_spec.rb",
+    "spec/predicate_spec.rb",
     "spec/sequence_spec.rb",
-    "spec/tuple_spec.rb",
+    "spec/type_check_spec.rb",
     "totally_lazy.gemspec"
   ]
   s.homepage = "http://github.com/kingsleyh/totally_lazy"
