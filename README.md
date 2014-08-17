@@ -4,6 +4,7 @@ This is a port of the java functional library [Totally Lazy](https://code.google
 
 ### Status
 
+[![Build Status](https://travis-ci.org/kingsleyh/totally_lazy.svg?branch=master)](https://travis-ci.org/kingsleyh/totally_lazy)
 [![Gem Version](https://badge.fury.io/rb/totally_lazy.svg)](http://badge.fury.io/rb/totally_lazy)
 
 ### Summary
