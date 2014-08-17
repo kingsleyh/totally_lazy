@@ -30,7 +30,7 @@ The following are some simple examples of the currently implemented functionalit
 require 'totally_lazy'
 
 sequence(1,2,3,4).filter(even) # lazily returns 2,4
-sequence(1,2).map(to_string) # lazily returns "1","2"
+sequence(1,2).map(as_string) # lazily returns "1","2"
 sequence(1,2,3).take(2) # lazily returns 1,2
 sequence(1,2,3).drop(2) # lazily returns 3
 sequence(1,2,3).tail # lazily returns 2,3

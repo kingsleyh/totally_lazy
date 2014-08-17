@@ -1,5 +1,0 @@
-class Tuple
-
-
-
-end

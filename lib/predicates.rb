@@ -14,19 +14,19 @@ module Predicates
 
   module Conversions
 
-    def to_string
+    def as_string
       -> (v) { v.to_s }
     end
 
-    def to_int
+    def as_int
       -> (v) { Type.responds(v, :to_i); v.to_i }
     end
 
-    def to_float
+    def as_float
       -> (v) { Type.responds(v, :to_i); v.to_f }
     end
 
-    def to_array
+    def as_array
       -> (v) { [v] }
     end
 
