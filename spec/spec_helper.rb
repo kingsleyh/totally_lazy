@@ -1,13 +1,16 @@
+require 'coveralls'
+Coveralls.wear!
+
 require 'simplecov'
 
-module SimpleCov::Configuration
-  def clean_filters
-    @filters = []
-  end
-end
+# module SimpleCov::Configuration
+#   def clean_filters
+#     @filters = []
+#   end
+# end
 
 SimpleCov.configure do
-  clean_filters
+  # clean_filters
   load_adapter 'test_frameworks'
 end
 
@@ -28,5 +31,3 @@ RSpec.configure do |config|
 
 end
 
-require 'coveralls'
-Coveralls.wear!
