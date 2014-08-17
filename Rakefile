@@ -28,6 +28,8 @@ Jeweler::RubygemsDotOrgTasks.new
 require 'rspec/core'
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec) do |spec|
+  require 'coveralls'
+  Coveralls.wear!
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
@@ -48,3 +50,5 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+
