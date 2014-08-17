@@ -1,5 +1,4 @@
-require 'rspec'
-require_relative '../lib/totally_lazy'
+require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe 'Type Check' do
 

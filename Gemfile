@@ -7,5 +7,6 @@ group :development do
   gem 'jeweler', '~> 2.0.1'
   gem 'rspec_html_formatter', '~> 0.3.0'
   gem 'rake', '~> 10.3.2'
+  gem 'simplecov', '>= 0'
   gem 'coveralls', require: false
 end
