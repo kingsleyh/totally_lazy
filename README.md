@@ -7,7 +7,7 @@ This is a port of the java functional library [Totally Lazy](https://code.google
 [![Build Status](https://travis-ci.org/kingsleyh/totally_lazy.svg?branch=master)](https://travis-ci.org/kingsleyh/totally_lazy)
 [![Gem Version](https://badge.fury.io/rb/totally_lazy.svg)](http://badge.fury.io/rb/totally_lazy)
 [![Stories in Ready](https://badge.waffle.io/kingsleyh/totally_lazy.svg?label=ready&title=Ready)](http://waffle.io/kingsleyh/totally_lazy)
-[![Coverage Status](https://coveralls.io/repos/kingsleyh/totally_lazy/badge.png)](https://coveralls.io/r/kingsleyh/totally_lazy)
+[![Coverage Status](https://coveralls.io/repos/kingsleyh/totally_lazy/badge.png?branch=master)](https://coveralls.io/r/kingsleyh/totally_lazy?branch=master)
 
 ### Summary
 
