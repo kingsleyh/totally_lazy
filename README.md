@@ -2,6 +2,10 @@
 
 This is a port of the java functional library [Totally Lazy](https://code.google.com/p/totallylazy/) to the ruby language. I've tried to get it as close as I can to the original concepts behind the java version of Totally Lazy but I'm still pretty far away from being happy with it.
 
+### Status
+
+[![Gem Version](https://badge.fury.io/rb/totally_lazy.svg)](http://badge.fury.io/rb/totally_lazy)
+
 ### Summary
 
 * Tries to be as lazy as possible
