@@ -3,11 +3,25 @@ module Predicates
   module Numbers
 
     def even
-      -> (v) { Type.responds(v, :even?); v if v.even? }
+      -> (v, invert=false) do
+        Type.responds(v, :even?)
+        if invert
+          v unless v.even?
+        else
+          v if v.even?
+        end
+      end
     end
 
     def odd
-      -> (v) { Type.responds(v, :odd?); v if v.odd? }
+      -> (v, invert=false) do
+        Type.responds(v, :odd?)
+        if invert
+          v unless v.odd?
+        else
+          v if v.odd?
+        end
+      end
     end
 
   end

@@ -44,5 +44,16 @@ describe 'Option' do
     expect { option(empty).get_or_throw(Exception) }.to raise_error(Exception)
   end
 
+  it 'should return boolean for empty?' do
+    expect(option(1).empty?).to eq(false)
+    expect(option(empty).empty?).to eq(true)
+   end
+
+  it 'should return boolean for defined?' do
+   expect(option(1).defined?).to eq(true)
+   expect(option('').defined?).to eq(false)
+  end
+
+
 
 end

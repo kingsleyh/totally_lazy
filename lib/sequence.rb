@@ -80,13 +80,22 @@ module Sequences
     alias find_all select
     alias filter select
 
-    def reject(&block)
-      Sequence.new(self) { |yielder, val|
-        if not block.call(val)
-          yielder << val
-        end
-      }
+    def reject(predicate=nil, &block)
+      if predicate
+        Sequence.new(self) { |yielder, val|
+          v = predicate.call(val,true)
+          yielder << v unless v.nil?
+        }
+      else
+        Sequence.new(self) { |yielder, val|
+          unless block.call(val)
+            yielder << val
+          end
+        }
+      end
     end
+
+    alias unfilter reject
 
     def grep(pattern)
       Sequence.new(self) { |yielder, val|

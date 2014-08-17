@@ -34,11 +34,11 @@ module Option
     end
 
     def empty?
-      @content.empty?
+      blank?
     end
 
     def defined?
-      !empty?
+      !blank?
     end
 
     def get_or_else(item)
@@ -79,7 +79,7 @@ module Option
     private
 
     def blank?
-      @content.respond_to?(:empty?) ? empty? : !self
+      @content.respond_to?(:empty?) ? @content.empty? : !@content
     end
 
   end

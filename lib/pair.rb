@@ -25,6 +25,12 @@ module Pair
       @second.call
     end
 
+    def each(&block)
+      [first,second].each do |i|
+        block.call(i)
+      end
+    end
+
     alias value second
 
     def to_map

@@ -36,4 +36,8 @@ describe 'Pair' do
     expect(pair('1', '2').to_f).to eq({1.0 => 2.0})
   end
 
+  it 'should support each' do
+    expect(pair(1,2).each{|x| x }).to eq([1,2])
+  end
+
 end
