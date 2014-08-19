@@ -49,4 +49,9 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+desc 'run rspec guard'
+task :guard do
+  system('bundle exec guard')
+end
+
 

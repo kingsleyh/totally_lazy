@@ -4,12 +4,14 @@ describe 'Predicates' do
 
   it 'should return only even numbers' do
     expect(sequence(1,2,3,4,5,6).filter(even)).to eq(sequence(2,4,6))
+    expect(sequence(1,2,3,4,5,6).unfilter(odd)).to eq(sequence(2,4,6))
     expect { sequence(pair(1,2),pair(3,4)).filter(even).entries }.to raise_error(UnsupportedTypeException)
   end
 
-  it 'should return only even numbers' do
-    expect(sequence(1,2,3,4,5,6).filter(even)).to eq(sequence(2,4,6))
-    expect { sequence(pair(1,2),pair(3,4)).filter(even).entries }.to raise_error(UnsupportedTypeException)
+  it 'should return only odd numbers' do
+    expect(sequence(1,2,3,4,5,6).filter(odd)).to eq(sequence(1,3,5))
+    expect(sequence(1,2,3,4,5,6).unfilter(even)).to eq(sequence(1,3,5))
+    expect { sequence(pair(1,2),pair(3,4)).filter(odd).entries }.to raise_error(UnsupportedTypeException)
   end
 
   it 'should return content as string' do

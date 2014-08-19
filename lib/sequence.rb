@@ -83,7 +83,7 @@ module Sequences
     def reject(predicate=nil, &block)
       if predicate
         Sequence.new(self) { |yielder, val|
-          v = predicate.call(val,true)
+          v = predicate.call(val, true)
           yielder << v unless v.nil?
         }
       else
@@ -227,18 +227,19 @@ module Sequences
 
     def transpose
       Sequence.new(Sequence::Generator.new do |g|
-        result = []
-        max_size = self.to_a.max { |a, b| a.size <=> b.size }.size
-        max_size.times do |i|
-          result[i] = [self.to_a.first.size]
-          self.to_a.each_with_index { |r, j| result[i][j] = r[i] }
-        end
-        result
         if self.empty?
           raise(NoSuchElementException.new, 'The sequence was empty')
         else
           raise(Exception.new, 'The subject of transposition must be multidimensional') unless self.to_a.first.is_a?(Array)
         end
+        result = []
+        max = option(self.to_a.max { |a, b| a.size <=> b.size })
+        max_size = max.get_or_throw(NoSuchElementException,'The option was empty').size
+        max_size.times do |i|
+          result[i] = [self.to_a.first.size]
+          self.to_a.each_with_index { |r, j| result[i][j] = r[i] }
+        end
+        result
         result.each { |i| g.yield i }
       end)
     end
@@ -308,6 +309,9 @@ module Sequences
       blank?(sequence[index]) ? none : some(sequence[index])
     end
 
+    def get_or_throw(index,exception,message='')
+      blank?(sequence[index]) ? raise(exception,message) : sequence[index]
+    end
 
     private
     def sequence

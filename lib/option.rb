@@ -1,7 +1,8 @@
 module Option
 
   def option(thing)
-    thing.nil? ? none : some(thing)
+    validate = thing.respond_to?(:empty?) ? thing.empty? : !thing
+    validate ? none : some(thing)
   end
 
   def some(thing)
@@ -18,7 +19,7 @@ module Option
 
     def initialize(content)
       @content = content
-      raise(Exception,'some cannot be nil') if @content.nil?
+      raise(Exception, 'some cannot be nil') if @content.nil?
     end
 
     def <=>(object)
@@ -49,8 +50,8 @@ module Option
       blank? ? nil : @content
     end
 
-    def get_or_throw(exception)
-      blank? ? raise(exception) : @content
+    def get_or_throw(exception,message='')
+      blank? ? raise(exception,message) : @content
     end
 
     def to_seq
@@ -58,16 +59,17 @@ module Option
     end
 
     def contains(item)
-     value == item
+      value == item
     end
 
     def exists?(predicate)
-
+     value
     end
 
     def join(target_sequence)
-     sequence(value) << target_sequence
+      sequence(value) << target_sequence
     end
+
     alias + join
     alias << join
 
@@ -95,6 +97,53 @@ module Option
     def <=>(object)
       self.state <=> object.state
     end
+
+    def get
+      raise NoSuchElementException.new, 'The option was empty'
+    end
+
+    def value
+      raise NoSuchElementException.new, 'The option was empty'
+    end
+
+    def empty?
+      true
+    end
+
+    def defined?
+     false
+    end
+
+    def get_or_else(item)
+     item
+    end
+
+    def get_or_nil
+      nil
+    end
+
+    def get_or_throw(exception,message='')
+      raise(exception,message)
+    end
+
+    def to_seq
+      sequence(self)
+    end
+
+    def contains(item)
+     false
+    end
+
+    def exists?(predicate)
+      false
+    end
+
+    def join(target_sequence)
+      sequence(target_sequence)
+    end
+
+    alias + join
+    alias << join
 
     protected
 

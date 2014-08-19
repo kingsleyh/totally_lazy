@@ -9,4 +9,5 @@ group :development do
   gem 'rake', '~> 10.3.2'
   gem 'simplecov', '>= 0'
   gem 'coveralls', require: false
+  gem 'guard-rspec', require: false
 end

@@ -24,6 +24,17 @@ module Predicates
       end
     end
 
+    def between(lower,higher)
+      -> (v, invert=false) do
+        Type.responds(v,:between?)
+        if invert
+          v unless v.between?(lower,higher)
+        else
+          v if v.between?(lower,higher)
+        end
+      end
+    end
+
   end
 
   module Conversions
