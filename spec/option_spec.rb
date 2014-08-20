@@ -103,6 +103,11 @@ describe 'Option' do
      expect(option(empty).contains('ooo')).to eq(false)
   end
 
+  it 'should return original sequence for join on none' do
+    expect(option(empty).join(sequence(1,2))).to eq(sequence(1,2))
+    expect(option(empty).join([1,2])).to eq(sequence([1,2]))
+  end
+
 
 
 end

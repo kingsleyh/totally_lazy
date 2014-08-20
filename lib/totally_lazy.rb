@@ -11,7 +11,7 @@ include Pair
 include Predicates::Numbers
 include Predicates::Conversions
 
-p sequence(1,2,3,4,5,6).unfilter(between(2,6)).entries
+
 
 
 

@@ -273,7 +273,7 @@ module Sequences
 
     def to_seq
       Sequence.new(Sequence::Generator.new do |g|
-        self.entries.map { |e| Type.check(e, Sequences::Sequence); e.entries }.flatten.each { |i| g.yield i }
+        self.entries.map { |e| Type.responds(e, :entries); e.entries }.flatten.each { |i| g.yield i }
       end)
     end
 

@@ -120,23 +120,44 @@ describe 'Sequence' do
   end
 
   it 'should convert a sequence of sequences into a single flattened sequence' do
-
+    expect(sequence(sequence(1,2,3), sequence(4), sequence(5,6,7)).to_seq).to eq(sequence(1, 2, 3, 4, 5, 6,7))
+    expect{ sequence(1,2,3).to_seq.entries }.to raise_error(UnsupportedTypeException)
   end
 
   it 'should create a sequence of sequences from a sequence of pairs' do
-
+    expect(sequence(pair(1,2),pair(3,4),pair(5,6)).from_pairs).to eq(sequence(1, 2, 3, 4, 5, 6))
+    expect {sequence({1=>2}).from_pairs.entries}.to raise_error(UnsupportedTypeException)
   end
 
   it 'should convert a sequence to an array' do
-
+    expect(sequence(1, 2, 3).to_a).to eq([1,2,3])
+    expect(sequence(pair(1,2),pair(3,4)).to_a).to eq([{1=>2},{3=>4}])
+    expect(empty.to_a).to eq([])
   end
 
   it 'should get or else the value at an index' do
-
+    expect(sequence(1, 2, 3).get_or_else(0,99)).to eq(1)
+    expect(sequence(1, 2, 3).get_or_else(99,1)).to eq(1)
   end
 
-  it 'should get an option at an index' do
+  it 'should get or else the value at an index' do
+     expect(sequence(1, 2, 3).get_or_throw(1,Exception,'oops')).to eq(2)
+     expect {sequence(1, 2, 3).get_or_throw(99,Exception,'oops')}.to raise_error(Exception)
+   end
 
+  it 'should get an option at an index' do
+    expect(sequence(1, 2, 3).get_option(1)).to eq(some(2))
+    expect(sequence(1, 2, 3).get_option(99)).to eq(none)
+  end
+
+  it 'should return all as flattened array' do
+    expect(sequence(sequence(1, 2, 3),sequence(4,5,6)).all).to eq([1,2,3,4,5,6])
+  end
+
+  it 'should iterate empty' do
+    expect(empty.each{|i| i}).to eq([])
+    expect(Empty.new([1,2]).each{|i| i}).to eq([1,2])
+    expect(Empty.new([1,2]){|a| a}).to eq(empty)
   end
 
 

@@ -139,7 +139,7 @@ module Option
     end
 
     def join(target_sequence)
-      sequence(target_sequence)
+      target_sequence.is_a?(Sequences::Sequence) ? target_sequence : sequence(target_sequence)
     end
 
     alias + join
