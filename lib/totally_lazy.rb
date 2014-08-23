@@ -3,58 +3,20 @@ require_relative 'sequence'
 require_relative 'pair'
 require_relative 'option'
 require_relative 'functor'
-require_relative 'predicates'
-require_relative 'where_processor'
+require_relative 'predicates/predicates'
+require_relative 'predicates/compare'
+require_relative 'predicates/conversions'
+require_relative 'predicates/numbers'
+require_relative 'predicates/where'
+require_relative 'predicates/where_processor'
 
 include Sequences
 include Option
 include Pair
+include Predicates
 include Predicates::Numbers
 include Predicates::Conversions
 include Predicates::Compare
-
-
-module Predicates
-  module Where
-    class WherePredicate
-
-      attr_reader :ands, :ors
-
-      def initialize
-        @ands = empty
-        @ors = empty
-      end
-
-      def where(predicates)
-        @ands = predicates.is_a?(Pair::Pair) ? @ands.append(predicates) : @ands.join(Pair.from_map(predicates))
-        self
-      end
-
-      def and(predicates)
-        @ands = predicates.is_a?(Pair::Pair) ? @ands.append(predicates) : @ands.join(Pair.from_map(predicates))
-        self
-      end
-
-      def or(predicates)
-        @ors = predicates.is_a?(Pair::Pair) ? @ors.append(predicates) : @ors.join(Pair.from_map(predicates))
-        self
-      end
-
-    end
-
-    def where(predicate_map)
-      WherePredicate.new.where(predicate_map)
-    end
-
-    def is(single_predicate)
-      pair(:self, single_predicate)
-    end
-
-  end
-
-
-end
-
 include Predicates::Where
 
 
