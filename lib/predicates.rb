@@ -3,7 +3,7 @@ module Predicates
   module Numbers
 
     def inverted(v, meth, pred)
-     v unless (meth == :self) ? v.send(pred) : v.send(meth).send(pred)
+      v unless (meth == :self) ? v.send(pred) : v.send(meth).send(pred)
     end
 
     def regular(v, meth, pred)
@@ -15,7 +15,7 @@ module Predicates
     end
 
     def regular_value(v, value, meth, pred)
-       v if (meth == :self) ? v.send(pred, value) : v.send(meth).send(pred, value)
+      v if (meth == :self) ? v.send(pred, value) : v.send(meth).send(pred, value)
     end
 
     def even
@@ -68,8 +68,13 @@ module Predicates
   module Compare
 
     def equals(value)
-      -> (v) { v if v == value }
+      -> (v, meth=:self, invert=false) do
+        Type.responds(v, :==)
+        invert ? inverted_value(v, value, meth, :==) : regular_value(v, value, meth, :==)
+      end
     end
+
+    alias equal_to equals
 
     def greater_than(value)
       -> (v, meth=:self, invert=false) do
@@ -79,44 +84,51 @@ module Predicates
     end
 
     def less_than(value)
-         -> (v, meth=:self, invert=false) do
-           Type.responds(v, :<)
-           invert ? inverted_value(v, value, meth, :<) : regular_value(v, value, meth, :<)
-         end
+      -> (v, meth=:self, invert=false) do
+        Type.responds(v, :<)
+        invert ? inverted_value(v, value, meth, :<) : regular_value(v, value, meth, :<)
+      end
+    end
+
+    def is_nil(value)
+      -> (v, meth=:self, invert=false) do
+        Type.responds(v, :nil?)
+        invert ? inverted_value(v, value, meth, :nil?) : regular_value(v, value, meth, :nil?)
+      end
     end
 
   end
 
-  module Where
-    class WherePredicate
-
-      attr_reader :predicates
-
-      def initialize
-        @predicates = empty
-      end
-
-      def where(predicates)
-        @predicates = predicates.is_a?(Pair) ? @predicates.append(predicates) : @predicates.join(Pair.from_map(predicates))
-        self
-      end
-
-      def and(predicates)
-        @predicates = predicates.is_a?(Pair) ? @predicates.append(predicates) : @predicates.join(Pair.from_map(predicates))
-        self
-      end
-
-    end
-
-    def where(predicate_map)
-      WherePredicate.new.where(predicate_map)
-    end
-
-    def is(single_predicate)
-      pair(:self, single_predicate)
-    end
-
-  end
+  # module Where
+  #   class WherePredicate
+  #
+  #     attr_reader :predicates
+  #
+  #     def initialize
+  #       @predicates = empty
+  #     end
+  #
+  #     def where(predicates)
+  #       @predicates = predicates.is_a?(Pair) ? @predicates.append(predicates) : @predicates.join(Pair.from_map(predicates))
+  #       self
+  #     end
+  #
+  #     def and(predicates)
+  #       @predicates = predicates.is_a?(Pair) ? @predicates.append(predicates) : @predicates.join(Pair.from_map(predicates))
+  #       self
+  #     end
+  #
+  #   end
+  #
+  #   def where(predicate_map)
+  #     WherePredicate.new.where(predicate_map)
+  #   end
+  #
+  #   def is(single_predicate)
+  #     pair(:self, single_predicate)
+  #   end
+  #
+  # end
 
 
 end

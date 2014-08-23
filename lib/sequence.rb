@@ -5,9 +5,6 @@ class UnsupportedTypeException < RuntimeError
 end
 
 
-
-
-
 module Sequences
 
   def sequence(*items)
@@ -54,7 +51,7 @@ module Sequences
     def map(predicate=nil, &block)
       if predicate
         Sequence.new(self) { |yielder, val|
-          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate) : predicate.call(val)
+          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.ands, predicate.ors) : predicate.call(val)
           yielder << v unless v.nil?
         }
       else
@@ -69,7 +66,7 @@ module Sequences
     def select(predicate=nil, &block)
       if predicate
         Sequence.new(self) { |yielder, val|
-          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.call(val)
+          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.ands, predicate.ors) : predicate.call(val)
           yielder << v unless v.nil?
         }
       else
@@ -87,7 +84,7 @@ module Sequences
     def reject(predicate=nil, &block)
       if predicate
         Sequence.new(self) { |yielder, val|
-          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.call(val,:self,true)
+          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.ands, predicate.ors) : predicate.call(val, :self, true)
           yielder << v unless v.nil?
         }
       else
@@ -242,7 +239,7 @@ module Sequences
         end
         result = []
         max = option(self.to_a.max { |a, b| a.size <=> b.size })
-        max_size = max.get_or_throw(NoSuchElementException,'The option was empty').size
+        max_size = max.get_or_throw(NoSuchElementException, 'The option was empty').size
         max_size.times do |i|
           result[i] = [self.to_a.first.size]
           self.to_a.each_with_index { |r, j| result[i][j] = r[i] }
@@ -317,8 +314,14 @@ module Sequences
       blank?(sequence[index]) ? none : some(sequence[index])
     end
 
-    def get_or_throw(index,exception,message='')
-      blank?(sequence[index]) ? raise(exception,message) : sequence[index]
+    def get_or_throw(index, exception, message='')
+      blank?(sequence[index]) ? raise(exception, message) : sequence[index]
+    end
+
+    def drop_nil
+      Sequence.new(Sequence::Generator.new do |g|
+        self.reject { |e| e.nil? }.each { |i| g.yield i }
+      end)
     end
 
     private
