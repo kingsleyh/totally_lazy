@@ -26,17 +26,17 @@ module Predicates
       end
 
       def where(predicates)
-        @ands = predicates.is_a?(Pair) ? @ands.append(predicates) : @ands.join(Pair.from_map(predicates))
+        @ands = predicates.is_a?(Pair::Pair) ? @ands.append(predicates) : @ands.join(Pair.from_map(predicates))
         self
       end
 
       def and(predicates)
-        @ands = predicates.is_a?(Pair) ? @ands.append(predicates) : @ands.join(Pair.from_map(predicates))
+        @ands = predicates.is_a?(Pair::Pair) ? @ands.append(predicates) : @ands.join(Pair.from_map(predicates))
         self
       end
 
       def or(predicates)
-        @ors = predicates.is_a?(Pair) ? @ors.append(predicates) : @ors.join(Pair.from_map(predicates))
+        @ors = predicates.is_a?(Pair::Pair) ? @ors.append(predicates) : @ors.join(Pair.from_map(predicates))
         self
       end
 
@@ -73,7 +73,8 @@ include Predicates::Where
 
 # p sequence(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12).filter(where(is greater_than 2).and(is less_than 8 ).and(is even)).entries
 
-p sequence(pair(1,2),pair(3,4)).filter(where(key:greater_than(1))).entries
+# p sequence(pair(1, 2), pair(3, 4),pair(5,6)).filter(where(key: greater_than(1)).and(key: less_than(5)).or(key:odd).or(key:equal_to(5))).entries.size
+# p sequence(pair(1, 2), pair(3, 4)).filter(where(key:odd)).entries
 
 
 

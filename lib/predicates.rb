@@ -3,43 +3,64 @@ module Predicates
   module Numbers
 
     def inverted(v, meth, pred)
-      v unless (meth == :self) ? v.send(pred) : v.send(meth).send(pred)
+      if meth == :self
+        Type.responds(v, pred)
+        v unless v.send(pred)
+      else
+        r = v.send(meth)
+        Type.responds(r, pred)
+        v unless r.send(pred)
+      end
     end
 
     def regular(v, meth, pred)
-      v if (meth == :self) ? v.send(pred) : v.send(meth).send(pred)
+      if meth == :self
+        Type.responds(v, pred)
+        v if v.send(pred)
+      else
+        r = v.send(meth)
+        Type.responds(r, pred)
+        v if r.send(pred)
+      end
     end
 
     def inverted_value(v, value, meth, pred)
-      v unless (meth == :self) ? v.send(pred, value) : v.send(meth).send(pred, value)
+      if meth == :self
+        Type.responds(v, pred)
+        v unless v.send(pred, value)
+      else
+        r = v.send(meth)
+        Type.responds(r, pred)
+        v unless r.send(pred, value)
+      end
     end
 
     def regular_value(v, value, meth, pred)
-      v if (meth == :self) ? v.send(pred, value) : v.send(meth).send(pred, value)
+      if meth == :self
+        Type.responds(v, :>)
+        v if v.send(pred, value)
+      else
+        r = v.send(meth)
+        Type.responds(r, :>)
+        v if r.send(pred, value)
+      end
     end
 
     def even
       -> (v, meth=:self, invert=false) do
-        Type.responds(v, :even?)
         invert ? inverted(v, meth, :even?) : regular(v, meth, :even?)
       end
     end
 
     def odd
       -> (v, meth=:self, invert=false) do
-        Type.responds(v, :odd?)
         invert ? inverted(v, meth, :odd?) : regular(v, meth, :odd?)
       end
     end
 
     def between(lower, higher)
-      -> (v, invert=false) do
-        Type.responds(v, :between?)
-        if invert
-          v unless v.between?(lower, higher)
-        else
-          v if v.between?(lower, higher)
-        end
+      -> (v, meth=:self, invert=false) do
+        invert ? inverted(v, meth, :between?) : regular(v, meth, :between?)
       end
     end
 
@@ -69,7 +90,6 @@ module Predicates
 
     def equals(value)
       -> (v, meth=:self, invert=false) do
-        Type.responds(v, :==)
         invert ? inverted_value(v, value, meth, :==) : regular_value(v, value, meth, :==)
       end
     end
@@ -78,21 +98,18 @@ module Predicates
 
     def greater_than(value)
       -> (v, meth=:self, invert=false) do
-        Type.responds(v, :>)
         invert ? inverted_value(v, value, meth, :>) : regular_value(v, value, meth, :>)
       end
     end
 
     def less_than(value)
       -> (v, meth=:self, invert=false) do
-        Type.responds(v, :<)
         invert ? inverted_value(v, value, meth, :<) : regular_value(v, value, meth, :<)
       end
     end
 
     def is_nil(value)
       -> (v, meth=:self, invert=false) do
-        Type.responds(v, :nil?)
         invert ? inverted_value(v, value, meth, :nil?) : regular_value(v, value, meth, :nil?)
       end
     end

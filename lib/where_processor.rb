@@ -9,7 +9,5 @@ class WhereProcessor
     else
       @value unless ors.map { |x| x.value.call(@value, x.key) }.drop_nil.empty?
     end
-
-
   end
 end

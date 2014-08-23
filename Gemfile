@@ -1,7 +1,5 @@
 source "http://rubygems.org"
 
-gem 'parslet', '>= 1.6.1'
-
 group :development do
   gem 'rspec', '~> 3.0.0'
   gem 'rdoc', '~> 3.12'
