@@ -87,7 +87,7 @@ module Sequences
     def reject(predicate=nil, &block)
       if predicate
         Sequence.new(self) { |yielder, val|
-          v = predicate.call(val, true)
+          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.call(val,:self,true)
           yielder << v unless v.nil?
         }
       else

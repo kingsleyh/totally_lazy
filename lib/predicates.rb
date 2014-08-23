@@ -2,31 +2,20 @@ module Predicates
 
   module Numbers
 
-    # def even
-    #   -> (v, meth=false, invert=false) do
-    #     Type.responds(v, :even?)
-    #     if invert
-    #       v unless v.even?
-    #     else
-    #       v if v.even?
-    #     end
-    #   end
-    # end
-
     def inverted(v, meth, pred)
-      option((meth == :self) ? v.send(pred) : v.send(meth).send(pred))
+     v unless (meth == :self) ? v.send(pred) : v.send(meth).send(pred)
     end
 
     def regular(v, meth, pred)
-      option((meth == :self) ? v.send(pred) : v.send(meth).send(pred))
+      v if (meth == :self) ? v.send(pred) : v.send(meth).send(pred)
     end
 
     def inverted_value(v, value, meth, pred)
-      option((meth == :self) ? v.send(pred, value) : v.send(meth).send(pred, value))
+      v unless (meth == :self) ? v.send(pred, value) : v.send(meth).send(pred, value)
     end
 
     def regular_value(v, value, meth, pred)
-       option((meth == :self) ? v.send(pred, value) : v.send(meth).send(pred, value))
+       v if (meth == :self) ? v.send(pred, value) : v.send(meth).send(pred, value)
     end
 
     def even
@@ -96,7 +85,38 @@ module Predicates
          end
     end
 
+  end
+
+  module Where
+    class WherePredicate
+
+      attr_reader :predicates
+
+      def initialize
+        @predicates = empty
+      end
+
+      def where(predicates)
+        @predicates = predicates.is_a?(Pair) ? @predicates.append(predicates) : @predicates.join(Pair.from_map(predicates))
+        self
+      end
+
+      def and(predicates)
+        @predicates = predicates.is_a?(Pair) ? @predicates.append(predicates) : @predicates.join(Pair.from_map(predicates))
+        self
+      end
+
+    end
+
+    def where(predicate_map)
+      WherePredicate.new.where(predicate_map)
+    end
+
+    def is(single_predicate)
+      pair(:self, single_predicate)
+    end
 
   end
+
 
 end

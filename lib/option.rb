@@ -26,6 +26,14 @@ module Option
       self.state <=> object.state
     end
 
+    def is_none?
+      self.is_a?(Some)
+    end
+
+    def is_some?
+      self.is_a?(None)
+    end
+
     def get
       @content
     end
@@ -96,6 +104,14 @@ module Option
 
     def <=>(object)
       self.state <=> object.state
+    end
+
+    def is_none?
+      self.is_a?(Some)
+    end
+
+    def is_some?
+      self.is_a?(None)
     end
 
     def get
