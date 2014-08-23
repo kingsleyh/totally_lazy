@@ -4,6 +4,10 @@ end
 class UnsupportedTypeException < RuntimeError
 end
 
+
+
+
+
 module Sequences
 
   def sequence(*items)
@@ -50,7 +54,7 @@ module Sequences
     def map(predicate=nil, &block)
       if predicate
         Sequence.new(self) { |yielder, val|
-          v = predicate.call(val)
+          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate) : predicate.call(val)
           yielder << v unless v.nil?
         }
       else
@@ -65,7 +69,7 @@ module Sequences
     def select(predicate=nil, &block)
       if predicate
         Sequence.new(self) { |yielder, val|
-          v = predicate.call(val)
+          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.call(val)
           yielder << v unless v.nil?
         }
       else
@@ -204,6 +208,10 @@ module Sequences
 
     def last_option
       sequence.empty? ? none : some(sequence.entries.last)
+    end
+
+    def contains?(value)
+      sequence.empty? ? false : sequence.entries.include?(value)
     end
 
     def tail
