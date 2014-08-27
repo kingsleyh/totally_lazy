@@ -51,7 +51,7 @@ module Sequences
     def map(predicate=nil, &block)
       if predicate
         Sequence.new(self) { |yielder, val|
-          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.ands, predicate.ors) : predicate.call(val)
+          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.call(val)
           yielder << v unless v.nil?
         }
       else
@@ -66,7 +66,7 @@ module Sequences
     def select(predicate=nil, &block)
       if predicate
         Sequence.new(self) { |yielder, val|
-          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.ands, predicate.ors) : predicate.call(val)
+          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.call(val)
           yielder << v unless v.nil?
         }
       else
@@ -84,7 +84,7 @@ module Sequences
     def reject(predicate=nil, &block)
       if predicate
         Sequence.new(self) { |yielder, val|
-          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.ands, predicate.ors) : predicate.call(val, :self, true)
+          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates,true) : predicate.call(val, :self, true)
           yielder << v unless v.nil?
         }
       else

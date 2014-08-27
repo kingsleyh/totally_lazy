@@ -40,6 +40,10 @@ include Predicates::Where
 
 
 
+p sequence(1,2,3).filter(where(is greater_than 1)).entries
+
+
+
 
 
 

@@ -34,5 +34,26 @@ describe 'Predicates' do
     expect(sequence(pair(1,2),pair(3,4)).map(as_array).head.class).to eq(Array)
   end
 
+  it 'should work with basic where predicates' do
+    expect(sequence(1,2,3).filter(where(is greater_than 1))).to eq(sequence(2,3))
+    expect(sequence(1,2,3).filter(where(is greater_than 1).and(is less_than 3))).to eq(sequence(2))
+  end
+
+  it 'should work with method where predicates' do
+    expect(sequence(pair(1,2),pair(3,4),pair(5,7)).filter(where(key:greater_than(1)).and(value:odd)).to_a).to eq(sequence(pair(5,7)).to_a)
+  end
+
+  it 'should work with inverted value predicates' do
+    expect(sequence(1,2,3,4,5).reject(where(is Compare.equal_to 3))).to eq(sequence(1,2,4,5))
+    expect(sequence(pair(1,2),pair(3,4),pair(5,7)).reject(where value:odd).to_a).to eq(sequence(pair(1,2),pair(3,4)).to_a)
+    expect(sequence(pair(1,2),pair(3,4),pair(5,7)).reject(where value:equals(2)).to_a).to eq(sequence(pair(3,4),pair(5,7)).to_a)
+  end
+
+  it 'should work with inverted predicates' do
+    expect(sequence(1,2,3,4,5).reject(where(is odd))).to eq(sequence(2,4))
+    expect(sequence(1,2,3,4,5).reject(greater_than 2)).to eq(sequence(1,2))
+    expect(sequence(1,2,3,4,5).filter(greater_than 2)).to eq(sequence(3,4,5))
+  end
+
 
 end

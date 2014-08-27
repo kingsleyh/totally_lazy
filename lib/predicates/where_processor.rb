@@ -3,11 +3,12 @@ class WhereProcessor
     @value = value
   end
 
-  def apply(ands, ors)
-    if ors.empty?
-      @value unless ands.map { |x| x.value.call(@value, x.key) }.contains?(nil)
+  def apply(predicates, invert=false)
+    p predicates.to_a
+    if invert
+      @value if predicates.map { |x| x.value.call(@value, x.key) }.contains?(nil)
     else
-      @value unless ors.map { |x| x.value.call(@value, x.key) }.drop_nil.empty?
+      @value unless predicates.map { |x| x.value.call(@value, x.key) }.contains?(nil)
     end
   end
 end

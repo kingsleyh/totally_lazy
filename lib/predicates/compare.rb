@@ -22,12 +22,6 @@ module Predicates
       end
     end
 
-    def is_nil(value)
-      -> (v, meth=:self, invert=false) do
-        invert ? inverted_value(v, value, meth, :nil?) : regular_value(v, value, meth, :nil?)
-      end
-    end
-
   end
 
 end
