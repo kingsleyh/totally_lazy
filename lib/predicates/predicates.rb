@@ -4,10 +4,6 @@ module Predicates
     if meth == :self
       Type.responds(v, pred)
       v unless v.send(pred)
-    else
-      r = v.send(meth)
-      Type.responds(r, pred)
-      v unless r.send(pred)
     end
   end
 
@@ -26,10 +22,6 @@ module Predicates
     if meth == :self
       Type.responds(v, pred)
       v unless v.send(pred, value)
-    else
-      r = v.send(meth)
-      Type.responds(r, pred)
-      v unless r.send(pred, value)
     end
   end
 

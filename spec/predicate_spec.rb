@@ -51,6 +51,7 @@ describe 'Predicates' do
 
   it 'should work with inverted predicates' do
     expect(sequence(1,2,3,4,5).reject(where(is odd))).to eq(sequence(2,4))
+    expect(sequence(1,2,3,4,5).reject(odd)).to eq(sequence(2,4))
     expect(sequence(1,2,3,4,5).reject(greater_than 2)).to eq(sequence(1,2))
     expect(sequence(1,2,3,4,5).filter(greater_than 2)).to eq(sequence(3,4,5))
   end
