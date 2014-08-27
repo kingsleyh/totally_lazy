@@ -39,6 +39,11 @@ include Predicates::Where
 # p sequence(pair(1, 2), pair(3, 4)).filter(where(key:odd)).entries
 
 
+a = "hello there people"
+f = a.split()
+f.first
+
+sequence()
 
 
 
