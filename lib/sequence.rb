@@ -83,9 +83,9 @@ module Sequences
 
     def reject(predicate=nil, &block)
       if predicate
-         p predicate
+        p predicate
         Sequence.new(self) { |yielder, val|
-          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates,true) : predicate.call(val, :self, true)
+          v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates, true) : predicate.call(val, :self, true)
           yielder << v unless v.nil?
         }
       else
@@ -289,6 +289,18 @@ module Sequences
       end)
     end
 
+    def from_arrays
+      Sequence.new(Sequence::Generator.new do |g|
+        self.entries.map { |e| Type.check(e, Array); e }.flatten.each { |i| g.yield i }
+      end)
+    end
+
+    def from_sets
+      Sequence.new(Sequence::Generator.new do |g|
+        self.entries.map { |e| Type.check(e, Set); e }.flatten.each { |i| g.yield i }
+      end)
+    end
+
     def to_a
       execution = {
           Sequences::Sequence => -> { self.entries.map { |s| s.entries } },
@@ -323,6 +335,25 @@ module Sequences
       Sequence.new(Sequence::Generator.new do |g|
         self.reject { |e| e.nil? }.each { |i| g.yield i }
       end)
+    end
+
+    def map_concurrently(predicate=nil, options={}, &block)
+      if predicate
+        Sequence.new(Sequence::Generator.new do |g|
+          Parallel.map(self.entries,options) { |val|
+            v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.call(val)
+            v unless v.nil?
+          }.each { |i| g.yield i }
+        end)
+      else
+        Sequence.new(Sequence::Generator.new do |g|
+          Parallel.map(self.entries,options) { |val| block.call(val) }.each { |i| g.yield i }
+        end)
+      end
+    end
+
+    def each_concurrently(options={}, &block)
+      Parallel.each(self.entries, options) { |val| block.call(val) }
     end
 
     private

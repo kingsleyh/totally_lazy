@@ -9,6 +9,7 @@ require_relative 'predicates/conversions'
 require_relative 'predicates/numbers'
 require_relative 'predicates/where'
 require_relative 'predicates/where_processor'
+require_relative 'parallel/parallel'
 
 include Sequences
 include Option
@@ -38,12 +39,13 @@ include Predicates::Where
 # p sequence(pair(1, 2), pair(3, 4),pair(5,6)).filter(where(key: greater_than(1)).and(key: less_than(5)).or(key:odd).or(key:equal_to(5))).entries.size
 # p sequence(pair(1, 2), pair(3, 4)).filter(where(key:odd)).entries
 
+# p sequence(1,2,3,4,5,6).map_concurrently(as_string,in_threads:10).entries
+# p sequence(1,2,3,4,5,6).map_concurrently{|i| i+5 }.entries
 
-a = "hello there people"
-f = a.split()
-f.first
+# sequence(1,2,3,4,5).each_concurrently{|i| sleep rand(10); p i }
 
-sequence()
+
+
 
 
 

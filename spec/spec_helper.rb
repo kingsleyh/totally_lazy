@@ -1,5 +1,5 @@
-require 'coveralls'
-Coveralls.wear!
+# require 'coveralls'
+# Coveralls.wear!
 
 require 'simplecov'
 
@@ -11,11 +11,12 @@ require 'simplecov'
 
 SimpleCov.configure do
   # clean_filters
-  load_adapter 'test_frameworks'
+  load_profile 'test_frameworks'
 end
 
 ENV["COVERAGE"] && SimpleCov.start do
   add_filter "/.rvm/"
+  add_filter "parallel"
 end
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
