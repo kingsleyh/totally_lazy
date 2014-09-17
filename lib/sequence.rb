@@ -297,7 +297,7 @@ module Sequences
 
     def from_sets
       Sequence.new(Sequence::Generator.new do |g|
-        self.entries.map { |e| Type.check(e, Set); e }.flatten.each { |i| g.yield i }
+        self.entries.map { |e| Type.check(e, Set); e.to_a }.flatten.each { |i| g.yield i }
       end)
     end
 
@@ -341,9 +341,8 @@ module Sequences
       if predicate
         Sequence.new(Sequence::Generator.new do |g|
           Parallel.map(self.entries,options) { |val|
-            v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.call(val)
-            v unless v.nil?
-          }.each { |i| g.yield i }
+            predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.call(val)
+          }.each { |i| g.yield i unless i.nil?}
         end)
       else
         Sequence.new(Sequence::Generator.new do |g|

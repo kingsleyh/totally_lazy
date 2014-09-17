@@ -160,5 +160,25 @@ describe 'Sequence' do
     expect(Empty.new([1,2]){|a| a}).to eq(empty)
   end
 
+  it 'should support from_arrays' do
+    expect(sequence([1,2,3,4,5]).from_arrays).to eq(sequence(1,2,3,4,5))
+  end
+
+  it 'should support from_sets' do
+    expect(sequence(Set.new [1,2,3,4,5]).from_sets.entries).to eq(sequence(1,2,3,4,5).entries)
+  end
+
+  it 'should map concurrently' do
+    expect(sequence(1,2,3,4,5).map_concurrently(even)).to eq(sequence(2,4))
+    expect(sequence(1,2,3,4,5).map_concurrently{|i| i+1}).to eq(sequence(2,3,4,5,6))
+    expect(sequence(1,2,3,4,5).map_concurrently(even,in_threads:2)).to eq(sequence(2,4))
+    expect(sequence(1,2,3,4,5).map_concurrently(where(is even),in_processes:2)).to eq(sequence(2,4))
+    expect(sequence(1,2,3,4,5).map_concurrently(nil,in_threads:2){|i| i+1}).to eq(sequence(2,3,4,5,6))
+  end
+
+  it 'should each concurrently' do
+    expect(sequence(1,2,3).each_concurrently{|i| i }).to eq([1,2,3])
+  end
+
 
 end
