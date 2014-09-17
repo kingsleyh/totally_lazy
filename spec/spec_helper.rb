@@ -1,16 +1,9 @@
-# require 'coveralls'
-# Coveralls.wear!
+require 'coveralls'
+Coveralls.wear!
 
 require 'simplecov'
 
-# module SimpleCov::Configuration
-#   def clean_filters
-#     @filters = []
-#   end
-# end
-
 SimpleCov.configure do
-  # clean_filters
   load_profile 'test_frameworks'
 end
 
