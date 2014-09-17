@@ -83,7 +83,6 @@ module Sequences
 
     def reject(predicate=nil, &block)
       if predicate
-        p predicate
         Sequence.new(self) { |yielder, val|
           v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates, true) : predicate.call(val, :self, true)
           yielder << v unless v.nil?
@@ -157,7 +156,6 @@ module Sequences
     def flat_map(&block)
       Sequence.new(self) { |yielder, val|
         ary = block.call(val)
-        # TODO: check ary is an Array
         ary.each { |x|
           yielder << x
         }
