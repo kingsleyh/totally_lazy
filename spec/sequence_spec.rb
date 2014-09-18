@@ -161,11 +161,11 @@ describe 'Sequence' do
   end
 
   it 'should support from_arrays' do
-    expect(sequence([1,2,3,4,5]).from_arrays).to eq(sequence(1,2,3,4,5))
+    expect(sequence([1,2,3,4,5],[6,7]).from_arrays).to eq(sequence(1,2,3,4,5,6,7))
   end
 
   it 'should support from_sets' do
-    expect(sequence(Set.new [1,2,3,4,5]).from_sets.entries).to eq(sequence(1,2,3,4,5).entries)
+    expect(sequence(Set.new([1,2,3,4,5]),Set.new([6,7])).from_sets.entries).to eq(sequence(1,2,3,4,5,6,7).entries)
   end
 
   it 'should map concurrently' do

@@ -47,9 +47,30 @@ some(sequence(1,2,3)).get_or_else(empty) # eagerly returns value or else empty s
 sequence(1, 2, 3, 4, 5).filter(where(is greater_than 2).and(is odd)) # lazily returns 3,5
 ```
 
+#### Generators
+
+There are 2 types of generators:
+
+* Seq - returns a sequence
+* Iter - returns a regular ruby enumerator
+
+```ruby
+Seq.range(1, 4) # lazily returns 1,2,3,4
+Seq.repeat("car") # lazily returns an infinite sequence of "car"s
+Seq.iterate(:+, 1) # lazily returns 1,2,3 ... to infinity
+Seq.range(1, 4).cycle # lazily returns 1,2,3,4,1,2,3,4,1,2,3,4 infinitely
+Seq.primes # lazily returns every prime number
+Seq.fibonacci # lazily returns the fibonacci sequence
+Seq.powers_of(3) # lazily returns the powers of 3 (i.e 1,3,9,27 ...)
+
+Iter.range(1,4) # example with Iter: lazily returns 1,2,3,4 with a regular ruby enumerator
+```
+
 Naturally you can combine these operations together:
 
 ```ruby
 option(1).join(sequence(2,3,4)).join(sequence(5,6)).filter(odd).take(2) 
 # lazily returns 1,3
+
+Seq.iterate(:+, 1).filter(even).take(2).reduce(:+) # returns 6
 ```

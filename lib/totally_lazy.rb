@@ -1,5 +1,6 @@
 require_relative 'type_check'
 require 'set'
+require 'prime'
 require_relative 'sequence'
 require_relative 'pair'
 require_relative 'option'
@@ -11,6 +12,7 @@ require_relative 'predicates/numbers'
 require_relative 'predicates/where'
 require_relative 'predicates/where_processor'
 require_relative 'parallel/parallel'
+require_relative 'generators'
 
 include Sequences
 include Option
@@ -20,6 +22,8 @@ include Predicates::Numbers
 include Predicates::Conversions
 include Predicates::Compare
 include Predicates::Where
+include Generators
+
 
 
 # p sequence(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12).filter(
@@ -43,7 +47,23 @@ include Predicates::Where
 
 
 
+# p Seq.repeat('car').take(10).entries
+# p Seq.range(1,1000000000000000000000000000).take(20).entries
 
+# p Seq.iterate(:*,2).take(10).entries
+# p Seq.fibonacci.take(20).entries
+# p Iter.fibonacci.take(20).entries
+# p Iter.primes.take(10).entries
+
+# p Seq.powers_of(3).take(10).entries
+# p Iter.powers_of(3).take(10).entries
+
+# p Seq.iterate(:+,1,0).take(10).entries
+
+# p Seq.range(1,4).cycle.take(20).entries
+# p Iter.range(1,4).cycle.take(20).entries
+
+# p Seq.iterate(:+, 1).filter(even).take(2).reduce(:+)
 
 
 

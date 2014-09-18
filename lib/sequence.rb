@@ -9,7 +9,7 @@ module Sequences
 
   def sequence(*items)
     if items.size == 1
-      if [Range, Hash].include?(items.first.class)
+      if [Range, Hash, Array, Set].include?(items.first.class)
         Sequence.new(items.first)
       elsif items.first.nil?
         empty
@@ -62,6 +62,28 @@ module Sequences
     end
 
     alias collect map
+
+    # def reduce(operation_or_value=nil)
+    #   case operation_or_value
+    #     when Symbol
+    #       # convert things like reduce(:+) into reduce { |s,e| s + e }
+    #       return reduce { |s,e| s.send(operation_or_value, e) }
+    #     when nil
+    #       acc = nil
+    #     else
+    #       acc = operation_or_value
+    #   end
+    #
+    #   each do |a|
+    #     if acc.nil?
+    #       acc = a
+    #     else
+    #       acc = yield(acc, a)
+    #     end
+    #   end
+    #
+    #   return acc
+    # end
 
     def select(predicate=nil, &block)
       if predicate
@@ -351,6 +373,12 @@ module Sequences
 
     def each_concurrently(options={}, &block)
       Parallel.each(self.entries, options) { |val| block.call(val) }
+    end
+
+    def cycle
+      Sequence.new(Sequence::Generator.new do |g|
+        self.entries.cycle.each { |i| g.yield i }
+      end)
     end
 
     private
