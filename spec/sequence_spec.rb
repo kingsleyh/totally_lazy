@@ -180,5 +180,13 @@ describe 'Sequence' do
     expect(sequence(1,2,3).each_concurrently{|i| i }).to eq([1,2,3])
   end
 
+  it 'should drop nils' do
+    expect(sequence(1,nil,2,nil,3).drop_nil).to eq(sequence(1,2,3))
+  end
+
+  it 'should cycle' do
+    expect(sequence(1,2,3).cycle.take(6)).to eq(sequence(1,2,3,1,2,3))
+  end
+
 
 end
