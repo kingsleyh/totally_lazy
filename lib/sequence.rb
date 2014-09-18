@@ -7,6 +7,27 @@ end
 
 module Sequences
 
+  # Creates a sequence
+  #
+  # == Parameters:
+  # items::
+  #   Varargs - any valid ruby objects can be supplied
+  #
+  # == Returns:
+  # A sequence
+  #
+  # == Examples
+  #
+  #   sequence(1,2,3,4).filter(even) # lazily returns 2,4
+  #   sequence(1,2).map(as_string) # lazily returns "1","2"
+  #   sequence(1, 2).map_concurrently(to_string) # lazily distributes the work to background threads
+  #   sequence(1,2,3).take(2) # lazily returns 1,2
+  #   sequence(1,2,3).drop(2) # lazily returns 3
+  #   sequence(1,2,3).tail # lazily returns 2,3
+  #   sequence(1,2,3).head # eagerly returns 1
+  #   sequence(1,2,3).head_option # eagerly returns an option
+  #   some(sequence(1,2,3)).get_or_else(empty) # eagerly returns value or else empty sequence
+  #   sequence(1, 2, 3, 4, 5).filter(where(is greater_than 2).and(is odd)) # lazily returns 3,5
   def sequence(*items)
     if items.size == 1
       if [Range, Hash, Array, Set].include?(items.first.class)
@@ -21,6 +42,15 @@ module Sequences
     end
   end
 
+  # Creates an empty sequence
+  #
+  # == Returns:
+  # An empty sequence
+  #
+  # == Examples
+  #
+  #   empty
+  #   some(sequence(1,2,3)).get_or_else(empty) # eagerly returns value or else empty sequence
   def empty
     Empty.new
   end
