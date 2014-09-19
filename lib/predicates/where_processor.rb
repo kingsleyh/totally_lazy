@@ -4,7 +4,6 @@ class WhereProcessor
   end
 
   def apply(predicates, invert=false)
-    p predicates.to_a
     if invert
       @value if predicates.map { |x| x.value.call(@value, x.key) }.contains?(nil)
     else

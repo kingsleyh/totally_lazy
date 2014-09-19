@@ -13,6 +13,7 @@ require_relative 'predicates/where'
 require_relative 'predicates/where_processor'
 require_relative 'parallel/parallel'
 require_relative 'generators'
+require_relative 'any'
 
 include Sequences
 include Option
@@ -23,7 +24,7 @@ include Predicates::Conversions
 include Predicates::Compare
 include Predicates::Where
 include Generators
-
+include Any
 
 
 # p sequence(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12).filter(
@@ -64,6 +65,30 @@ include Generators
 # p Iter.range(1,4).cycle.take(20).entries
 
 # p Seq.iterate(:+, 1).filter(even).take(2).reduce(:+)
+
+#
+# class Person
+#   attr_accessor :first_name,:last_name,:age
+#   def initialize(first_name,last_name,age)
+#     @first_name = first_name
+#     @last_name = last_name
+#     @age = age
+#   end
+#
+#   def name
+#     @first_name
+#   end
+#
+# end
+#
+# people = Seq.repeat(-> {Person.new(Any.string,Any.string,Any.string)}).take(10)
+#
+# p people.filter(where(first_name:matches(/s/))).map(&:first_name).entries
+
+# p sequence(pair('apples','pairs'),pair('banana','orange'),pair('apples','melon')).filter(where key:matches(/app/)).entries
+
+
+
 
 
 

@@ -6,7 +6,7 @@ module Generators
 
     def repeat(item)
       Sequence.new(Sequence::Generator.new do |g|
-        loop { g.yield item }
+        loop { g.yield item.respond_to?(:call) ? item.call : item }
       end)
     end
 

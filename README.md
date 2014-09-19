@@ -46,6 +46,7 @@ sequence(1,2,3).head # eagerly returns 1
 sequence(1,2,3).head_option # eagerly returns an option
 some(sequence(1,2,3)).get_or_else(empty) # eagerly returns value or else empty sequence
 sequence(1, 2, 3, 4, 5).filter(where(is greater_than 2).and(is odd)) # lazily returns 3,5
+sequence(pair(1, 2), pair(3, 4)).filter(where(key:odd)) # lazily returns 1,3
 ```
 
 #### Generators

@@ -22,6 +22,11 @@ module Predicates
       end
     end
 
+    def matches(regex)
+      -> (v, meth=:self, invert=false) do
+        invert ? inverted_regex(v, regex, meth) : regular_regex(v, regex, meth)
+      end
+    end
   end
 
 end

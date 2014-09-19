@@ -56,5 +56,10 @@ describe 'Predicates' do
     expect(sequence(1,2,3,4,5).filter(greater_than 2)).to eq(sequence(3,4,5))
   end
 
+  it 'should work with regex predicates' do
+    expect(sequence(pair('apples','pears'),pair('banana','orange'),pair('apples','melon')).filter(where key:matches(/app/)).to_a).to eq(sequence(pair('apples','pears'),pair('apples','melon')).to_a)
+    expect(sequence(pair('apples','pears'),pair('banana','orange'),pair('apples','melon')).reject(where key:matches(/app/)).to_a).to eq(sequence(pair('banana','orange')).to_a)
+  end
+
 
 end

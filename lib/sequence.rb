@@ -4,7 +4,6 @@ end
 class UnsupportedTypeException < RuntimeError
 end
 
-
 module Sequences
 
   # Creates a sequence
