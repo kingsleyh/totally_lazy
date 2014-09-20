@@ -87,8 +87,9 @@ include Any
 
 # p sequence(pair('apples','pairs'),pair('banana','orange'),pair('apples','melon')).filter(where key:matches(/app/)).entries
 
+# p Seq.repeat(-> { rand(9)}).take(10).to_a.join.to_i
 
-
+# p  Seq.range(1,100000000000000).shuffle.take(10).to_a
 
 
 

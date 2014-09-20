@@ -3,11 +3,11 @@ module Any
   module_function
 
   def string(length=rand(10)+1)
-    (0...length).map { ('a'..'z').to_a[rand(26)] }.join
+    Seq.range('a','z').shuffle.take(length).to_a.join
   end
 
-  # def any_int(length=rand(10))
-  #   Seq.iterate(:+,1,length).map{ ('a'..'z').to_a[rand(26)] }
-  # end
+  def int(length=rand(10)+1)
+    Seq.repeat(-> { rand(9)}).take(length).to_a.join.to_i
+  end
 
 end
