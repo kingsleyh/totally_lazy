@@ -27,11 +27,11 @@ module Option
     end
 
     def is_none?
-      self.is_a?(Some)
+      self.is_a?(None)
     end
 
     def is_some?
-      self.is_a?(None)
+      self.is_a?(Some)
     end
 
     def get
@@ -107,11 +107,11 @@ module Option
     end
 
     def is_none?
-      self.is_a?(Some)
+      self.is_a?(None)
     end
 
     def is_some?
-      self.is_a?(None)
+      self.is_a?(Some)
     end
 
     def get

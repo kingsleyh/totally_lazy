@@ -108,6 +108,13 @@ describe 'Option' do
     expect(option(empty).join([1,2])).to eq(sequence([1,2]))
   end
 
+  it 'should know the type' do
+    expect(option(empty).is_none?).to be(true)
+    expect(option(empty).is_some?).to be(false)
+    expect(option(1).is_none?).to be(false)
+    expect(option(1).is_some?).to be(true)
+  end
+
 
 
 end
