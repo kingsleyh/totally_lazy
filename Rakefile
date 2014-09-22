@@ -54,4 +54,9 @@ task :guard do
   system('bundle exec guard')
 end
 
+desc 'rebuild gem'
+task :re do
+  system('gem uninstall totally_lazy && rake build && gem install -l pkg/totally_lazy-' + File.read('VERSION') + '.gem')
+end
+
 

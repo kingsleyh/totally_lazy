@@ -192,5 +192,4 @@ describe 'Sequence' do
     expect(sequence(:name,'kings',:age,39).in_pairs.to_a).to eq(sequence(pair(:name,'kings'),pair(:age,39)).to_a)
   end
 
-
 end

@@ -7,6 +7,17 @@ describe 'Sequence Serialization/Deserialization' do
     expect(serialized).to eq([{:type => :pair, :values => {7 => 8}}, {:type => :sequence, :values => [1, 2]}, {:type => :sequence, :values => [3, {:type => :sequence, :values => [5, 6]}]}, {:type => :sequence, :values => [{:type => :pair, :values => {:apple => 99}}, {:type => :some, :values => 1}, {:type => :none, :values => nil}]}, {:type => Array, :values => [10, 11]}, {:type => Hash, :values => [{:type => Array, :values => [:apple, 8]}, {:type => Array, :values => [:pear, 9]}]}])
   end
 
+  it 'should serialize a pair containing sequences' do
+    serialized = sequence(pair(:people,sequence(1,2))).serialize
+    expect(serialized).to eq([{:type => :pair, :values => [:people, {:type => :sequence, :values => [1,2]}]}])
+  end
+
+  it 'should deserialize a pair containing sequences' do
+     serialized = sequence(pair(:people,sequence(1,2))).serialize
+     expect(deserialize(serialized)[0].key).to eq(:people)
+     expect(deserialize(serialized)[0].value).to eq(sequence(1,2))
+  end
+
   it 'should deserialize a serialized sequence containing pair' do
     expect(seq[0].to_map).to eq(pair(7, 8).to_map)
   end

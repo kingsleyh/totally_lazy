@@ -55,7 +55,7 @@ module Sequences
   end
 
   def deserialize(data)
-   sequence(data).deserialize
+    sequence(data).deserialize
   end
 
   class Sequence < Enumerator
@@ -306,9 +306,7 @@ module Sequences
     def join(target_sequence)
       Sequence.new(Sequence::Generator.new do |g|
         raise(Exception.new, 'The target (right side) must be a sequence') unless target_sequence.kind_of?(Sequences::Sequence)
-        elements = self.entries
-        elements = elements.reject { |i| i.is_a?(Empty) }
-        (elements << target_sequence.entries).flatten.each { |i| g.yield i }
+        self.entries.push(target_sequence.entries).flatten.each { |i| g.yield i unless i.is_a?(Empty) }
       end)
     end
 
@@ -457,7 +455,13 @@ module Sequences
           serializer(data, entry)
           container << {type: :sequence, values: data}
         elsif entry.is_a?(Pair::Pair)
-          container << {type: :pair, values: entry.to_map}
+          if entry.second.is_a?(Sequences::Sequence)
+            data = []
+            serializer(data, entry)
+            container << {type: :pair, values: data}
+          else
+            container << {type: :pair, values: entry.to_map}
+          end
         elsif entry.is_a?(Option::Some)
           container << {type: :some, values: entry.value}
         elsif entry.is_a?(Option::None)
@@ -480,7 +484,11 @@ module Sequences
             deserializer(data, entry[:values])
             container << Sequence.new(data)
           elsif entry[:type] == :pair
-            container << pair(entry[:values].keys.first, entry[:values].values.first)
+            if entry[:values].is_a?(Array)
+              container << pair(entry[:values].first, Sequence.new(entry[:values][1][:values]))
+            else
+              container << pair(entry[:values].keys.first, entry[:values].values.first)
+            end
           elsif entry[:type] == :some
             container << some(entry[:values])
           elsif entry[:type] == :none

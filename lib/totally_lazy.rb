@@ -112,6 +112,21 @@ include Any
 # p a
 
 
+# s1 = Seq.range(1,3000000)
+# s2 = Seq.range(1,3000000)
+#
+# s = Time.now
+# p s1.join2(s2).head
+# f = Time.now
+# p f - s
+#
+#
+# s = Time.now
+# p s1.join(s2).head
+# f = Time.now
+# p f - s
+
+
 
 
 
