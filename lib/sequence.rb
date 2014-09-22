@@ -370,6 +370,23 @@ module Sequences
       end
     end
 
+    def _dump_data
+      {:sequence => self.entries}
+    end
+
+    def serialize(container,entries)
+      entries.each do |entry|
+
+        if entry.respond_to?(:all)
+          container << {type: entry.class, value: entry.all}
+        else
+          container << {type: entry.class, value: entry}
+        end
+        serialize(container,entry) if entry.respond_to?(:each)
+      end
+         container
+    end
+
     def all
       to_a.flatten
     end

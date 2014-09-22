@@ -91,6 +91,10 @@ include Any
 
 # p  Seq.range(1,100000000000000).shuffle.take(10).to_a
 
+# a = sequence(sequence(1,sequence(2)))
+#
+# p empty.serialize([],a)
+
 
 
 
