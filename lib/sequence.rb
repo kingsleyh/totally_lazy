@@ -55,56 +55,7 @@ module Sequences
   end
 
   def deserialize(data)
-    c = []
-    deserializer(c, data)
-    sequence(c)
-  end
-
-  def deserializer(container, data)
-    data.each do |entry|
-      if entry.is_a?(Hash)
-        if entry[:type] == :sequence
-          data = []
-          deserializer(data, entry[:values])
-          container << Sequence.new(data)
-        elsif entry[:type] == :pair
-          container << pair(entry[:values].keys.first, entry[:values].values.first)
-        elsif entry[:type] == :some
-          container << some(entry[:values])
-        elsif entry[:type] == :none
-          container << none
-        elsif entry[:type] == Hash
-          h = entry[:values].map{|e| [e[:values]].to_h }.reduce({}){|a,b| a.merge(b)}
-          container << h
-        else
-          container << entry[:type].send(:new,entry[:values])
-        end
-      else
-        container << entry
-      end
-    end
-  end
-
-  def serializer(container, entries)
-    entries.each do |entry|
-      if entry.is_a?(Sequences::Sequence)
-        data = []
-        serializer(data, entry)
-        container << {type: :sequence, values: data}
-      elsif entry.is_a?(Pair::Pair)
-        container << {type: :pair, values: entry.to_map}
-      elsif entry.is_a?(Option::Some)
-        container << {type: :some, values: entry.value}
-      elsif entry.is_a?(Option::None)
-        container << {type: :none, values: nil}
-      elsif entry.respond_to?(:each)
-        data = []
-        serializer(data, entry)
-        container << {type: entry.class, values: data}
-      else
-        container << entry
-      end
-    end
+   Sequence.deserialize(data)
   end
 
   class Sequence < Enumerator
@@ -423,14 +374,24 @@ module Sequences
       end
     end
 
-    def _dump_data
-      {:sequence => self.entries}
+    def marshal_dump
+      serialize
+    end
+
+    def marshal_load
+
     end
 
     def serialize
       c = []
       serializer(c, self.entries)
       c
+    end
+
+    def self.deserialize(data)
+      c = []
+      self.deserializer(c, data)
+      Sequence.new(c)
     end
 
     def all
@@ -504,6 +465,31 @@ module Sequences
           data = []
           serializer(data, entry)
           container << {type: entry.class, values: data}
+        else
+          container << entry
+        end
+      end
+    end
+
+    def self.deserializer(container, data)
+      data.each do |entry|
+        if entry.is_a?(Hash)
+          if entry[:type] == :sequence
+            data = []
+            deserializer(data, entry[:values])
+            container << Sequence.new(data)
+          elsif entry[:type] == :pair
+            container << pair(entry[:values].keys.first, entry[:values].values.first)
+          elsif entry[:type] == :some
+            container << some(entry[:values])
+          elsif entry[:type] == :none
+            container << none
+          elsif entry[:type] == Hash
+            h = entry[:values].map { |e| [e[:values]].to_h }.reduce({}) { |a, b| a.merge(b) }
+            container << h
+          else
+            container << entry[:type].send(:new, entry[:values])
+          end
         else
           container << entry
         end
