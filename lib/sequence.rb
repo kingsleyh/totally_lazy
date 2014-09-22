@@ -352,9 +352,8 @@ module Sequences
 
     def in_pairs
       Sequence.new(Sequence::Generator.new do |g|
-        g.yield pair(self.next,self.next)
+        self.each_slice(2){ |k,v| g.yield pair(k,v)}
       end)
-      self.rewind
     end
 
     def to_a

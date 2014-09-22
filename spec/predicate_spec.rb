@@ -49,6 +49,10 @@ describe 'Predicates' do
     expect(sequence(pair(1,2),pair(3,4),pair(5,7)).reject(where value:equals(2)).to_a).to eq(sequence(pair(3,4),pair(5,7)).to_a)
   end
 
+  it 'should work with symbols as values when applying predicates' do
+    expect(sequence(pair(:people,sequence(1,2)), pair(:swans,10)).filter(where(key:equals(:swans))).to_a).to eq(sequence(pair(:swans,10)).to_a)
+  end
+
   it 'should work with inverted predicates' do
     expect(sequence(1,2,3,4,5).reject(where(is odd))).to eq(sequence(2,4))
     expect(sequence(1,2,3,4,5).reject(odd)).to eq(sequence(2,4))
