@@ -188,5 +188,9 @@ describe 'Sequence' do
     expect(sequence(1,2,3).cycle.take(6)).to eq(sequence(1,2,3,1,2,3))
   end
 
+  it 'should get pairs from sequence' do
+    expect(sequence(:name,'kings',:age,39).in_pairs.to_a).to eq(sequence(pair(:name,'kings'),pair(:age,39)).from_pairs.to_a)
+  end
+
 
 end

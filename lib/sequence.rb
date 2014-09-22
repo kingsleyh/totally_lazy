@@ -350,6 +350,13 @@ module Sequences
       end)
     end
 
+    def in_pairs
+      Sequence.new(Sequence::Generator.new do |g|
+        g.yield pair(self.next,self.next)
+      end)
+      self.rewind
+    end
+
     def to_a
       execution = {
           Sequences::Sequence => -> { self.entries.map { |s| s.entries } },
