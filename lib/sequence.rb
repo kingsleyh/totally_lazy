@@ -55,7 +55,7 @@ module Sequences
   end
 
   def deserialize(data)
-   Sequence.deserialize(data)
+   sequence(data).deserialize
   end
 
   class Sequence < Enumerator
@@ -378,8 +378,8 @@ module Sequences
       serialize
     end
 
-    def marshal_load
-
+    def marshal_load(data)
+      Sequence.new(data).deserialize
     end
 
     def serialize
@@ -388,9 +388,9 @@ module Sequences
       c
     end
 
-    def self.deserialize(data)
+    def deserialize
       c = []
-      self.deserializer(c, data)
+      deserializer(c, self.entries)
       Sequence.new(c)
     end
 
@@ -440,7 +440,8 @@ module Sequences
       end)
     end
 
-    private
+    protected
+
     def sequence
       Sequence.new(self)
     end
@@ -471,7 +472,7 @@ module Sequences
       end
     end
 
-    def self.deserializer(container, data)
+    def deserializer(container, data)
       data.each do |entry|
         if entry.is_a?(Hash)
           if entry[:type] == :sequence
