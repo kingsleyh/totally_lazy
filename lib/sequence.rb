@@ -54,6 +54,59 @@ module Sequences
     Empty.new
   end
 
+  def deserialize(data)
+    c = []
+    deserializer(c, data)
+    sequence(c)
+  end
+
+  def deserializer(container, data)
+    data.each do |entry|
+      if entry.is_a?(Hash)
+        if entry[:type] == :sequence
+          data = []
+          deserializer(data, entry[:values])
+          container << Sequence.new(data)
+        elsif entry[:type] == :pair
+          container << pair(entry[:values].keys.first, entry[:values].values.first)
+        elsif entry[:type] == :some
+          container << some(entry[:values])
+        elsif entry[:type] == :none
+          container << none
+        elsif entry[:type] == Hash
+          h = entry[:values].map{|e| [e[:values]].to_h }.reduce({}){|a,b| a.merge(b)}
+          container << h
+        else
+          container << entry[:type].send(:new,entry[:values])
+        end
+      else
+        container << entry
+      end
+    end
+  end
+
+  def serializer(container, entries)
+    entries.each do |entry|
+      if entry.is_a?(Sequences::Sequence)
+        data = []
+        serializer(data, entry)
+        container << {type: :sequence, values: data}
+      elsif entry.is_a?(Pair::Pair)
+        container << {type: :pair, values: entry.to_map}
+      elsif entry.is_a?(Option::Some)
+        container << {type: :some, values: entry.value}
+      elsif entry.is_a?(Option::None)
+        container << {type: :none, values: nil}
+      elsif entry.respond_to?(:each)
+        data = []
+        serializer(data, entry)
+        container << {type: entry.class, values: data}
+      else
+        container << entry
+      end
+    end
+  end
+
   class Sequence < Enumerator
 
     include Comparable
@@ -352,7 +405,7 @@ module Sequences
 
     def in_pairs
       Sequence.new(Sequence::Generator.new do |g|
-        self.each_slice(2){ |k,v| g.yield pair(k,v)}
+        self.each_slice(2) { |k, v| g.yield pair(k, v) }
       end)
     end
 
@@ -374,17 +427,10 @@ module Sequences
       {:sequence => self.entries}
     end
 
-    def serialize(container,entries)
-      entries.each do |entry|
-
-        if entry.respond_to?(:all)
-          container << {type: entry.class, value: entry.all}
-        else
-          container << {type: entry.class, value: entry}
-        end
-        serialize(container,entry) if entry.respond_to?(:each)
-      end
-         container
+    def serialize
+      c = []
+      serializer(c, self.entries)
+      c
     end
 
     def all
@@ -412,13 +458,13 @@ module Sequences
     def map_concurrently(predicate=nil, options={}, &block)
       if predicate
         Sequence.new(Sequence::Generator.new do |g|
-          Parallel.map(self.entries,options) { |val|
+          Parallel.map(self.entries, options) { |val|
             predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.call(val)
-          }.each { |i| g.yield i unless i.nil?}
+          }.each { |i| g.yield i unless i.nil? }
         end)
       else
         Sequence.new(Sequence::Generator.new do |g|
-          Parallel.map(self.entries,options) { |val| block.call(val) }.each { |i| g.yield i }
+          Parallel.map(self.entries, options) { |val| block.call(val) }.each { |i| g.yield i }
         end)
       end
     end
@@ -440,6 +486,28 @@ module Sequences
 
     def blank?(item)
       item.respond_to?(:empty?) ? item.empty? : !item
+    end
+
+    def serializer(container, entries)
+      entries.each do |entry|
+        if entry.is_a?(Sequences::Sequence)
+          data = []
+          serializer(data, entry)
+          container << {type: :sequence, values: data}
+        elsif entry.is_a?(Pair::Pair)
+          container << {type: :pair, values: entry.to_map}
+        elsif entry.is_a?(Option::Some)
+          container << {type: :some, values: entry.value}
+        elsif entry.is_a?(Option::None)
+          container << {type: :none, values: nil}
+        elsif entry.respond_to?(:each)
+          data = []
+          serializer(data, entry)
+          container << {type: entry.class, values: data}
+        else
+          container << entry
+        end
+      end
     end
 
   end

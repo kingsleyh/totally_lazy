@@ -91,10 +91,25 @@ include Any
 
 # p  Seq.range(1,100000000000000).shuffle.take(10).to_a
 
-# a = sequence(sequence(1,sequence(2)))
+# a = sequence(pair(7,8),sequence(1,2),sequence(3,sequence(5,6)),sequence(pair(:apple,99), option(1),none),[10,11],{:apple => 8,:pear => 9}).serialize
 #
-# p empty.serialize([],a)
+# p a
+# p deserialize(a)[5]
 
+# p sequence(pair(1,2))[0]
+
+# p empty.gan(ser).entries
+
+# def countdown(c,n)
+#   return if n.zero? # base case
+#   c << n
+#   countdown(c,n-1)    # getting closer to base case
+# end
+#
+#
+# a = []
+# countdown(a,5)
+# p a
 
 
 
