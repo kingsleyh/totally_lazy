@@ -127,6 +127,32 @@ include Any
 # p f - s
 
 
+# p Seq.range(1,20).filter(odd).update(10).to_a
+
+# require 'ostruct'
+# #
+# #
+# # p Seq.repeat(->{OpenStruct.new(name:Any.string(5),age:Any.int(2))}).take(100000).update(age:11,name:'woops').take(1000).head
+# #
+# # p sequence({apple:1,pear:2}).each_slice(2).map{|s| [s[0],s[1]]}.to_a
+#
+# a = Seq.range(1,10).map{|n| OpenStruct.new(name:Any.string(5),age:Any.int(2)) }.to_a
+#
+# orig = sequence(a)
+#
+# updates = orig.filter(where(age:greater_than(70))).update(age:2)
+#
+# p orig.count
+# p updates.count
+#
+
+
+
+#
+# p sequence(pair(1,2),pair(3,4),pair(5,7)).filter(where(key:greater_than(1))).count
+
+
+
 
 
 

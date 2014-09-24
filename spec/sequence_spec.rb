@@ -192,4 +192,11 @@ describe 'Sequence' do
     expect(sequence(:name,'kings',:age,39).in_pairs.to_a).to eq(sequence(pair(:name,'kings'),pair(:age,39)).to_a)
   end
 
+  it 'should update items in a sequence' do
+    expect(Seq.repeat(->{OpenStruct.new(name:Any.string(5),age:Any.int(2))}).take(100000).update(age:11,name:'woops').take(10).map{|s| [s.name,s.age]}.head).to eq(['woops',11])
+    expect(Seq.range(1,10).filter(odd).update(2)).to eq(sequence(2,2,2,2,2))
+  end
+
+
+
 end

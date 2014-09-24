@@ -4,6 +4,9 @@ end
 class UnsupportedTypeException < RuntimeError
 end
 
+class UnsupportedMethodException < RuntimeError
+end
+
 module Sequences
 
   # Creates a sequence
@@ -370,6 +373,25 @@ module Sequences
         first_item = self.peek_values.first.class
         execution[first_item].nil? ? self.entries : execution[first_item].call
       end
+    end
+
+    def update(item)
+      Sequence.new(Sequence::Generator.new do |g|
+        if item.is_a?(Hash)
+          self.map do |e|
+            item.map { |k,v|
+              raise(UnsupportedMethodException.new, "Tried to call method: #{k} on #{e.class} but method not supported") unless e.respond_to?(k) or e.respond_to?(":#{k}=")
+              begin
+                e.send(k, v) if e.respond_to?(k); e
+              rescue
+                e.send("#{k}=", v) if e.respond_to?("#{k}="); e
+              end
+            }.first
+          end
+        else
+          self.map { item }
+        end.each { |i| g.yield i }
+      end)
     end
 
     def marshal_dump
