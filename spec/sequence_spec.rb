@@ -197,6 +197,21 @@ describe 'Sequence' do
     expect(Seq.range(1,10).filter(odd).update(2)).to eq(sequence(2,2,2,2,2))
   end
 
+  it 'should sort by attributes' do
+    expect(sequence(pair(:a,1),pair(:d,4),pair(:c,3),pair(:b,2)).sorting_by{|e| e.value }.to_a).to eq([{:a=>1}, {:b=>2}, {:c=>3}, {:d=>4}])
+    expect(sequence(pair(:a,1),pair(:d,4),pair(:c,3),pair(:b,2)).sorting_by(:value).to_a).to eq([{:a=>1}, {:b=>2}, {:c=>3}, {:d=>4}])
+    expect(sequence(
+        OpenStruct.new(first_name:'David',age:19,job:'computers'),
+        OpenStruct.new(first_name:'Chris',age:19,job:'art'),
+        OpenStruct.new(first_name:'Andrew',age:32,job:'dancing'),
+        OpenStruct.new(first_name:'Andrew',age:18,job:'dancing'),
+           ).sorting_by{|e| [e.first_name,e.age] }.map{|e| [e.first_name,e.age,e.job]}.to_a).to eq([['Andrew', 18, 'dancing'], ['Andrew', 32, 'dancing'], ['Chris', 19, 'art'], ['David', 19, 'computers']])
+  end
+
+  it 'should sort' do
+    expect(sequence(5,2,3,1,4).sorting).to eq(sequence(1,2,3,4,5))
+  end
+
 
 
 end

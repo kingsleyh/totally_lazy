@@ -25,6 +25,16 @@ module Pair
       @second.call
     end
 
+    def first=(v)
+     @first = -> { v }
+    end
+    alias key= first=
+
+    def second=(v)
+      @second = -> { v }
+    end
+    alias value= second=
+
     def each(&block)
       [first,second].each do |i|
         block.call(i)

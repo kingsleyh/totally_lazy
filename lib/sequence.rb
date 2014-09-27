@@ -191,12 +191,12 @@ module Sequences
 
     def take(n)
       Sequence.new(Sequence::Generator.new do |g|
-        self.each_with_index do |v,i|
-         if i < n
-           g.yield v
-         else
-           raise StopIteration
-         end
+        self.each_with_index do |v, i|
+          if i < n
+            g.yield v
+          else
+            raise StopIteration
+          end
         end
       end)
     end
@@ -339,7 +339,7 @@ module Sequences
 
     def to_maps(symbolize=true)
       Sequence.new(Sequence::Generator.new do |g|
-        self.each_slice(2) do |k,v|
+        self.each_slice(2) do |k, v|
           if symbolize
             g.yield k.to_s.to_sym => v
           else
@@ -391,7 +391,7 @@ module Sequences
       Sequence.new(Sequence::Generator.new do |g|
         if item.is_a?(Hash)
           self.map do |e|
-            item.map { |k,v|
+            item.map { |k, v|
               raise(UnsupportedMethodException.new, "Tried to call method: #{k} on #{e.class} but method not supported") unless e.respond_to?(k) or e.respond_to?(":#{k}=")
               begin
                 e.send(k, v) if e.respond_to?(k); e
@@ -428,6 +428,24 @@ module Sequences
 
     def all
       to_a.flatten
+    end
+
+    def sorting_by(*attr, &block)
+      if attr.empty?
+        Sequence.new(Sequence::Generator.new do |g|
+          self.sort_by { |e| block.call(e) }.each { |i| g.yield i }
+        end)
+      else
+        Sequence.new(Sequence::Generator.new do |g|
+          self.sort_by { |e| attr.map{|v| e.send(v)} }.each { |i| g.yield i }
+        end)
+      end
+    end
+
+    def sorting
+      Sequence.new(Sequence::Generator.new do |g|
+        self.sort.each { |i| g.yield i }
+      end)
     end
 
     def get_or_else(index, or_else)
