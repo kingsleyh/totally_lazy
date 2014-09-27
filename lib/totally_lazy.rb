@@ -14,6 +14,7 @@ require_relative 'predicates/where_processor'
 require_relative 'parallel/parallel'
 require_relative 'generators'
 require_relative 'any'
+require_relative 'utils'
 
 include Sequences
 include Option
@@ -25,6 +26,7 @@ include Predicates::Compare
 include Predicates::Where
 include Generators
 include Any
+include Maps
 
 
 # p sequence(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12).filter(
@@ -144,6 +146,9 @@ include Any
 #
 # p orig.count
 # p updates.count
+
+
+
 #
 
 

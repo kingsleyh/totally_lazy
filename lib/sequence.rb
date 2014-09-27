@@ -337,6 +337,18 @@ module Sequences
       end)
     end
 
+    def to_maps(symbolize=true)
+      Sequence.new(Sequence::Generator.new do |g|
+        self.each_slice(2) do |k,v|
+          if symbolize
+            g.yield k.to_s.to_sym => v
+          else
+            g.yield k => v
+          end
+        end
+      end)
+    end
+
     def from_pairs
       Sequence.new(Sequence::Generator.new do |g|
         self.entries.map { |e| Type.check(e, Pair::Pair); [e.key, e.value] }.flatten.each { |i| g.yield i }
