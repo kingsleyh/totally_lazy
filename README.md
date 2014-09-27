@@ -17,6 +17,8 @@ This is a port of the java functional library [Totally Lazy](https://code.google
 
 ### Install
 
+This gem requires ruby 2.x.x
+
 In your bundler Gemfile
 
 ```ruby

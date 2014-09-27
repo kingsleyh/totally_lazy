@@ -190,15 +190,15 @@ module Sequences
     end
 
     def take(n)
-      taken = 0
-      Sequence.new(self) { |yielder, val|
-        if taken < n
-          yielder << val
-          taken += 1
-        else
-          raise StopIteration
+      Sequence.new(Sequence::Generator.new do |g|
+        self.each_with_index do |v,i|
+         if i < n
+           g.yield v
+         else
+           raise StopIteration
+         end
         end
-      }
+      end)
     end
 
     def take_while(&block)

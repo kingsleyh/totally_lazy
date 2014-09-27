@@ -148,11 +148,6 @@ include Any
 
 
 
-#
-# p sequence(pair(1,2),pair(3,4),pair(5,7)).filter(where(key:greater_than(1))).count
-
-
-
 
 
 
