@@ -3,29 +3,21 @@ module Predicates
   module Compare
 
     def equals(value)
-      -> (v, meth=:self, invert=false) do
-        invert ? inverted_value(v, value, meth, :==) : regular_value(v, value, meth, :==)
-      end
+      value_predicate(:equals,:==,value)
     end
 
     alias equal_to equals
 
     def greater_than(value)
-      -> (v, meth=:self, invert=false) do
-        invert ? inverted_value(v, value, meth, :>) : regular_value(v, value, meth, :>)
-      end
+      value_predicate(:greater_than,:>,value)
     end
 
     def less_than(value)
-      -> (v, meth=:self, invert=false) do
-        invert ? inverted_value(v, value, meth, :<) : regular_value(v, value, meth, :<)
-      end
+      value_predicate(:less_than,:<,value)
     end
 
     def matches(regex)
-      -> (v, meth=:self, invert=false) do
-        invert ? inverted_regex(v, regex, meth) : regular_regex(v, regex, meth)
-      end
+      regex_predicate(:regex,regex)
     end
   end
 

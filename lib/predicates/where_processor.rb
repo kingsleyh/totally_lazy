@@ -5,9 +5,9 @@ class WhereProcessor
 
   def apply(predicates, invert=false)
     if invert
-      @value if predicates.map { |x| x.value.call(@value, x.key) }.contains?(nil)
+      @value if predicates.map { |x| x.value.exec.call(@value, x.key) }.contains?(nil)
     else
-      @value unless predicates.map { |x| x.value.call(@value, x.key) }.contains?(nil)
+      @value unless predicates.map { |x| x.value.exec.call(@value, x.key) }.contains?(nil)
     end
   end
 end

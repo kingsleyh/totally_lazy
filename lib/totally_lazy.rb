@@ -147,11 +147,16 @@ include Maps
 # p orig.count
 # p updates.count
 
-
+# p where(id:equals(1)).as_map.entries
 
 #
 
+# p sequence(1,2,3,4).filter(where(is equal_to(2))).entries
 
+# p where(is equal_to 2).predicates.head.value
+
+
+# p sequence(1,2,3,4,5,6).map(as_string).to_a
 
 
 

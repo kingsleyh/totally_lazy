@@ -3,15 +3,11 @@ module Predicates
   module Numbers
 
     def even
-      -> (v, meth=:self, invert=false) do
-        invert ? inverted(v, meth, :even?) : regular(v, meth, :even?)
-      end
+      self_predicate(:even,:even?)
     end
 
     def odd
-      -> (v, meth=:self, invert=false) do
-        invert ? inverted(v, meth, :odd?) : regular(v, meth, :odd?)
-      end
+      self_predicate(:even,:odd?)
     end
     #
     # def between(lower, higher)
