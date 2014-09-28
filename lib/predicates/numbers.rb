@@ -7,7 +7,7 @@ module Predicates
     end
 
     def odd
-      self_predicate(:even,:odd?)
+      self_predicate(:odd,:odd?)
     end
     #
     # def between(lower, higher)
