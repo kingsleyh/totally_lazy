@@ -22,7 +22,7 @@ This gem requires ruby 2.x.x
 In your bundler Gemfile
 
 ```ruby
- gem totally_lazy, '~>0.0.5' 
+ gem totally_lazy, '~>0.0.6' 
 ```
 
 Or with rubygems

@@ -62,8 +62,8 @@ module Predicates
     ValuePredicate.new(name, pred, value)
   end
 
-  def regex_predicate(name, regex)
-    RegexPredicate.new(name, regex)
+  def regex_predicate(name, value)
+    RegexPredicate.new(name, value)
   end
 
   def self_predicate(name,pred)
@@ -122,16 +122,16 @@ module Predicates
 
   class RegexPredicate < Predicates::Predicate
 
-    attr_reader :name, :regex
+    attr_reader :name, :value
 
-    def initialize(name, regex)
+    def initialize(name, value)
       @name = name
-      @regex = regex
+      @value = value
     end
 
     def exec
       -> (v, meth=:self, invert=false) do
-        invert ? inverted_regex(v, @regex, meth) : regular_regex(v, @regex, meth)
+        invert ? inverted_regex(v, @value, meth) : regular_regex(v, @value, meth)
       end
     end
 

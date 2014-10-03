@@ -16,8 +16,8 @@ module Predicates
       value_predicate(:less_than,:<,value)
     end
 
-    def matches(regex)
-      regex_predicate(:matches,regex)
+    def matches(value)
+      regex_predicate(:matches,value)
     end
 
   end
