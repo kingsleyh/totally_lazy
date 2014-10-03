@@ -17,8 +17,9 @@ module Predicates
     end
 
     def matches(regex)
-      regex_predicate(:regex,regex)
+      regex_predicate(:matches,regex)
     end
+
   end
 
 end
