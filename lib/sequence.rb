@@ -349,6 +349,10 @@ module Sequences
       end)
     end
 
+    def to_map(symbolize=true)
+      Maps.merge(to_maps(symbolize))
+    end
+
     def from_pairs
       Sequence.new(Sequence::Generator.new do |g|
         self.entries.map { |e| Type.check(e, Pair::Pair); [e.key, e.value] }.flatten.each { |i| g.yield i }
@@ -458,6 +462,17 @@ module Sequences
 
     def get_or_throw(index, exception, message='')
       blank?(sequence[index]) ? raise(exception, message) : sequence[index]
+    end
+
+
+    def get_by(pair_key)
+      item = self.filter{|e| e.first == pair_key}.head_option
+      item.is_some? ? item.get.value : none
+    end
+
+    def into_hash
+      raise(Exception.new, 'The sequence must contain pairs') unless self.head.kind_of?(Pair::Pair)
+      Maps.merge(self.map{|p| {p.key => p.value}})
     end
 
     def drop_nil

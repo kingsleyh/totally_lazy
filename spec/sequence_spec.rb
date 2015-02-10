@@ -212,6 +212,14 @@ describe 'Sequence' do
     expect(sequence(5,2,3,1,4).sorting).to eq(sequence(1,2,3,4,5))
   end
 
+  it 'should convert sequence to a map' do
+    expect(sequence(oops('apple',1,'pear',2)).to_map).to eq({apple:1,pear:2})
+  end
+
+  def oops(*values)
+    values
+  end
+
 
 
 end
