@@ -125,6 +125,8 @@ describe 'Option' do
   end
 
   it 'should support map' do
+    expect(option([{apple:1,pear:2},{melon:3}]).map{|h| h}).to eq(some([{apple:1,pear:2},{melon:3}]))
+    expect(option({apple:1,pear:2})).to eq(some({apple:1,pear:2}))
     expect(option(1).map(as_string)).to eq(some('1'))
     expect(option(1).collect(as_string)).to eq(some('1'))
     expect(option(sequence(1, 2, 3)).map { |s| s.entries }).to eq(some([1, 2, 3]))

@@ -44,6 +44,7 @@ module Sequences
     end
   end
 
+
   # Creates an empty sequence
   #
   # == Returns:
@@ -165,14 +166,13 @@ module Sequences
     end
 
     def drop(n)
-      dropped = 0
-      Sequence.new(self) { |yielder, val|
-        if dropped < n
-          dropped += 1
-        else
-          yielder << val
-        end
-      }
+      Sequence.new(Sequence::Generator.new do |g|
+                     self.each_with_index do |v, i|
+                       unless i < n
+                         g.yield v
+                       end
+                     end
+                   end)
     end
 
     def drop_while(&block)
@@ -191,14 +191,14 @@ module Sequences
 
     def take(n)
       Sequence.new(Sequence::Generator.new do |g|
-        self.each_with_index do |v, i|
-          if i < n
-            g.yield v
-          else
-            raise StopIteration
-          end
-        end
-      end)
+                     self.each_with_index do |v, i|
+                       if i < n
+                         g.yield v
+                       else
+                         raise StopIteration
+                       end
+                     end
+                   end)
     end
 
     def take_while(&block)
@@ -249,7 +249,7 @@ module Sequences
     end
 
     def head
-      sequence.empty? ? raise(NoSuchElementException.new, 'The sequence was empty') : sequence.first
+      sequence.empty? ? raise(NoSuchElementException.new, 'The sequence was empty') : sequence.entries.first
     end
 
     def head_option
@@ -270,83 +270,83 @@ module Sequences
 
     def tail
       Sequence.new(Sequence::Generator.new do |g|
-        self.empty? ? raise(NoSuchElementException.new, 'The sequence was empty') : self.drop(1).each { |i| g.yield i }
-      end)
+                     self.empty? ? raise(NoSuchElementException.new, 'The sequence was empty') : self.drop(1).each { |i| g.yield i }
+                   end)
     end
 
     def init
       Sequence.new(Sequence::Generator.new do |g|
-        size = self.count
-        self.empty? ? raise(NoSuchElementException.new, 'The sequence was empty') : self.first(size-1).each { |i| g.yield i }
-      end)
+                     size = self.count
+                     self.empty? ? raise(NoSuchElementException.new, 'The sequence was empty') : self.first(size-1).each { |i| g.yield i }
+                   end)
     end
 
     def shuffle
       Sequence.new(Sequence::Generator.new do |g|
-        self.empty? ? raise(NoSuchElementException.new, 'The sequence was empty') : self.entries.shuffle.each { |i| g.yield i }
-      end)
+                     self.empty? ? raise(NoSuchElementException.new, 'The sequence was empty') : self.entries.shuffle.each { |i| g.yield i }
+                   end)
     end
 
     def transpose
       Sequence.new(Sequence::Generator.new do |g|
-        if self.empty?
-          raise(NoSuchElementException.new, 'The sequence was empty')
-        else
-          raise(Exception.new, 'The subject of transposition must be multidimensional') unless self.to_a.first.is_a?(Array)
-        end
-        result = []
-        max = option(self.to_a.max { |a, b| a.size <=> b.size })
-        max_size = max.get_or_throw(NoSuchElementException, 'The option was empty').size
-        max_size.times do |i|
-          result[i] = [self.to_a.first.size]
-          self.to_a.each_with_index { |r, j| result[i][j] = r[i] }
-        end
-        result
-        result.each { |i| g.yield i }
-      end)
+                     if self.empty?
+                       raise(NoSuchElementException.new, 'The sequence was empty')
+                     else
+                       raise(Exception.new, 'The subject of transposition must be multidimensional') unless self.to_a.first.is_a?(Array)
+                     end
+                     result = []
+                     max = option(self.to_a.max { |a, b| a.size <=> b.size })
+                     max_size = max.get_or_throw(NoSuchElementException, 'The option was empty').size
+                     max_size.times do |i|
+                       result[i] = [self.to_a.first.size]
+                       self.to_a.each_with_index { |r, j| result[i][j] = r[i] }
+                     end
+                     result
+                     result.each { |i| g.yield i }
+                   end)
     end
 
     def join(target_sequence)
       Sequence.new(Sequence::Generator.new do |g|
-        raise(Exception.new, 'The target (right side) must be a sequence') unless target_sequence.kind_of?(Sequences::Sequence)
-        self.entries.push(target_sequence.entries).flatten.each { |i| g.yield i unless i.is_a?(Empty) }
-      end)
+                     raise(Exception.new, 'The target (right side) must be a sequence') unless target_sequence.kind_of?(Sequences::Sequence)
+                     self.entries.push(target_sequence.entries).flatten.each { |i| g.yield i unless i.is_a?(Empty) }
+                   end)
     end
 
     alias << join
 
     def add(target_sequence)
       Sequence.new(Sequence::Generator.new do |g|
-        (self.entries + target_sequence.entries).each { |i| g.yield i }
-      end)
+                     (self.entries + target_sequence.entries).each { |i| g.yield i }
+                   end)
     end
 
     alias + add
 
     def append(item)
       Sequence.new(Sequence::Generator.new do |g|
-        elements = self.entries
-        elements = elements.reject { |i| i.is_a?(Empty) }
-        (elements << item).each { |i| g.yield i }
-      end)
+                     elements = self.entries
+                     elements = elements.reject { |i| i.is_a?(Empty) }
+                     (elements << item).each { |i| g.yield i }
+                   end)
     end
 
     def to_seq
       Sequence.new(Sequence::Generator.new do |g|
-        self.entries.map { |e| Type.responds(e, :entries); e.entries }.flatten.each { |i| g.yield i }
-      end)
+                     self.entries.map { |e| Type.responds(e, :entries); e.entries }.flatten.each { |i| g.yield i }
+                   end)
     end
 
     def to_maps(symbolize=true)
       Sequence.new(Sequence::Generator.new do |g|
-        self.each_slice(2) do |k, v|
-          if symbolize
-            g.yield k.to_s.to_sym => v
-          else
-            g.yield k => v
-          end
-        end
-      end)
+                     self.each_slice(2) do |k, v|
+                       if symbolize
+                         g.yield k.to_s.to_sym => v
+                       else
+                         g.yield k => v
+                       end
+                     end
+                   end)
     end
 
     def to_map(symbolize=true)
@@ -355,26 +355,26 @@ module Sequences
 
     def from_pairs
       Sequence.new(Sequence::Generator.new do |g|
-        self.entries.map { |e| Type.check(e, Pair::Pair); [e.key, e.value] }.flatten.each { |i| g.yield i }
-      end)
+                     self.entries.map { |e| Type.check(e, Pair::Pair); [e.key, e.value] }.flatten.each { |i| g.yield i }
+                   end)
     end
 
     def from_arrays
       Sequence.new(Sequence::Generator.new do |g|
-        self.entries.map { |e| Type.check(e, Array); e }.flatten.each { |i| g.yield i }
-      end)
+                     self.entries.map { |e| Type.check(e, Array); e }.flatten.each { |i| g.yield i }
+                   end)
     end
 
     def from_sets
       Sequence.new(Sequence::Generator.new do |g|
-        self.entries.map { |e| Type.check(e, Set); e.to_a }.flatten.each { |i| g.yield i }
-      end)
+                     self.entries.map { |e| Type.check(e, Set); e.to_a }.flatten.each { |i| g.yield i }
+                   end)
     end
 
     def in_pairs
       Sequence.new(Sequence::Generator.new do |g|
-        self.each_slice(2) { |k, v| g.yield pair(k, v) }
-      end)
+                     self.each_slice(2) { |k, v| g.yield pair(k, v) }
+                   end)
     end
 
     def to_a
@@ -393,21 +393,21 @@ module Sequences
 
     def update(item)
       Sequence.new(Sequence::Generator.new do |g|
-        if item.is_a?(Hash)
-          self.map do |e|
-            item.map { |k, v|
-              raise(UnsupportedMethodException.new, "Tried to call method: #{k} on #{e.class} but method not supported") unless e.respond_to?(k) or e.respond_to?(":#{k}=")
-              begin
-                e.send(k, v) if e.respond_to?(k); e
-              rescue
-                e.send("#{k}=", v) if e.respond_to?("#{k}="); e
-              end
-            }.first
-          end
-        else
-          self.map { item }
-        end.each { |i| g.yield i }
-      end)
+                     if item.is_a?(Hash)
+                       self.map do |e|
+                         item.map { |k, v|
+                           raise(UnsupportedMethodException.new, "Tried to call method: #{k} on #{e.class} but method not supported") unless e.respond_to?(k) or e.respond_to?(":#{k}=")
+                           begin
+                             e.send(k, v) if e.respond_to?(k); e
+                           rescue
+                             e.send("#{k}=", v) if e.respond_to?("#{k}="); e
+                           end
+                         }.first
+                       end
+                     else
+                       self.map { item }
+                     end.each { |i| g.yield i }
+                   end)
     end
 
     def marshal_dump
@@ -437,19 +437,19 @@ module Sequences
     def sorting_by(*attr, &block)
       if attr.empty?
         Sequence.new(Sequence::Generator.new do |g|
-          self.sort_by { |e| block.call(e) }.each { |i| g.yield i }
-        end)
+                       self.sort_by { |e| block.call(e) }.each { |i| g.yield i }
+                     end)
       else
         Sequence.new(Sequence::Generator.new do |g|
-          self.sort_by { |e| attr.map{|v| e.send(v)} }.each { |i| g.yield i }
-        end)
+                       self.sort_by { |e| attr.map { |v| e.send(v) } }.each { |i| g.yield i }
+                     end)
       end
     end
 
     def sorting
       Sequence.new(Sequence::Generator.new do |g|
-        self.sort.each { |i| g.yield i }
-      end)
+                     self.sort.each { |i| g.yield i }
+                   end)
     end
 
     def get_or_else(index, or_else)
@@ -466,32 +466,32 @@ module Sequences
 
 
     def get_by(pair_key)
-      item = self.filter{|e| e.first == pair_key}.head_option
+      item = self.filter { |e| e.first == pair_key }.head_option
       item.is_some? ? item.get.value : none
     end
 
     def into_hash
       raise(Exception.new, 'The sequence must contain pairs') unless self.head.kind_of?(Pair::Pair)
-      Maps.merge(self.map{|p| {p.key => p.value}})
+      Maps.merge(self.map { |p| {p.key => p.value} })
     end
 
     def drop_nil
       Sequence.new(Sequence::Generator.new do |g|
-        self.reject { |e| e.nil? }.each { |i| g.yield i }
-      end)
+                     self.reject { |e| e.nil? }.each { |i| g.yield i }
+                   end)
     end
 
     def map_concurrently(predicate=nil, options={}, &block)
       if predicate
         Sequence.new(Sequence::Generator.new do |g|
-          Parallel.map(self.entries, options) { |val|
-            predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.exec.call(val)
-          }.each { |i| g.yield i unless i.nil? }
-        end)
+                       Parallel.map(self.entries, options) { |val|
+                         predicate.is_a?(WherePredicate) ? WhereProcessor.new(val).apply(predicate.predicates) : predicate.exec.call(val)
+                       }.each { |i| g.yield i unless i.nil? }
+                     end)
       else
         Sequence.new(Sequence::Generator.new do |g|
-          Parallel.map(self.entries, options) { |val| block.call(val) }.each { |i| g.yield i }
-        end)
+                       Parallel.map(self.entries, options) { |val| block.call(val) }.each { |i| g.yield i }
+                     end)
       end
     end
 
@@ -501,8 +501,8 @@ module Sequences
 
     def cycle
       Sequence.new(Sequence::Generator.new do |g|
-        self.entries.cycle.each { |i| g.yield i }
-      end)
+                     self.entries.cycle.each { |i| g.yield i }
+                   end)
     end
 
     protected
