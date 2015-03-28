@@ -22,6 +22,8 @@ module Option
       raise(Exception, 'some cannot be nil') if @content.nil?
     end
 
+
+
     def <=>(object)
       self.state <=> object.state
     end
@@ -58,8 +60,8 @@ module Option
       blank? ? nil : @content
     end
 
-    def get_or_throw(exception,message='')
-      blank? ? raise(exception,message) : @content
+    def get_or_throw(exception, message='')
+      blank? ? raise(exception, message) : @content
     end
 
     def to_seq
@@ -71,12 +73,62 @@ module Option
     end
 
     def exists?(predicate)
-     value
+      value
     end
 
     def join(target_sequence)
       sequence(value) << target_sequence
     end
+
+    def map(predicate=nil, &block)
+      sequence(@content).map(predicate, &block).head_option
+    end
+
+    alias collect map
+
+    def select(predicate=nil, &block)
+      sequence(@content).select(predicate, &block).head_option
+    end
+
+    alias find_all select
+    alias filter select
+
+    def reject(predicate=nil, &block)
+      sequence(@content).reject(predicate, &block).head_option
+    end
+
+    alias unfilter reject
+
+    def grep(pattern)
+      sequence(@content).grep(pattern).head_option
+    end
+
+    def drop(n)
+      sequence(@content).drop(n).head_option
+    end
+
+    def drop_while(&block)
+      sequence(@content).drop_while(&block).head_option
+    end
+
+    def take(n)
+      sequence(@content).take(n).head_option
+    end
+
+    def take_while(&block)
+      sequence(@content).take_while(&block).head_option
+    end
+
+    def flat_map(&block)
+      sequence(@content).flat_map(&block).head_option
+    end
+
+    alias collect_concat flat_map
+
+    # TODO - fix me
+    # def zip(*args, &block)
+    #   sequence(@content).zip(*args,&block).head_option
+    # end
 
     alias + join
     alias << join
@@ -127,19 +179,19 @@ module Option
     end
 
     def defined?
-     false
+      false
     end
 
     def get_or_else(item)
-     item
+      item
     end
 
     def get_or_nil
       nil
     end
 
-    def get_or_throw(exception,message='')
-      raise(exception,message)
+    def get_or_throw(exception, message='')
+      raise(exception, message)
     end
 
     def to_seq
@@ -147,7 +199,7 @@ module Option
     end
 
     def contains(item)
-     false
+      false
     end
 
     def exists?(predicate)
@@ -160,6 +212,51 @@ module Option
 
     alias + join
     alias << join
+
+    def map(predicate=nil, &block)
+          sequence(@content).map(predicate, &block).head_option
+        end
+
+        alias collect map
+
+        def select(predicate=nil, &block)
+         none
+        end
+
+        alias find_all select
+        alias filter select
+
+        def reject(predicate=nil, &block)
+          none
+        end
+
+        alias unfilter reject
+
+        def grep(pattern)
+          none
+        end
+
+        def drop(n)
+          none
+        end
+
+        def drop_while(&block)
+          none
+        end
+
+        def take(n)
+          none
+        end
+
+        def take_while(&block)
+          none
+        end
+
+        def flat_map(&block)
+          none
+        end
+
+        alias collect_concat flat_map
 
     protected
 
