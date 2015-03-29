@@ -73,8 +73,87 @@ Iter.range(1,4) # example with Iter: lazily returns 1,2,3,4 with a regular ruby 
 Naturally you can combine these operations together:
 
 ```ruby
-option(1).join(sequence(2,3,4)).join(sequence(5,6)).filter(odd).take(2) 
-# lazily returns 1,3
+option(1).join(sequence(2,3,4)).join(sequence(5,6)).filter(odd).take(2) # lazily returns 1,3
 
 Seq.iterate(:+, 1).filter(even).take(2).reduce(:+) # returns 6
 ```
+
+### Predicates
+
+You can supply basic predicates as follows:
+
+##### numbers
+
+    sequence(1,2,3).filter(even) # returns 2
+
+##### conversions
+
+    sequence(1,2,3).map(as_string) # returns ["1","2","3"]
+
+##### comparisons
+
+    sequence(1,2,3).filter(equals(2) # return 2
+
+##### where - for self or objects
+
+**using self**
+
+When the predicate applies to an item in the sequence you use the **is** keyword with *where* to indicate the operation is on *self*
+
+    sequence(1,2,3).filter(where is greater_than 2)
+
+**using objects**
+
+When the predicate applies to a method on an object in the sequence then you supply hashmap of method_name:predicate (without using *is*)
+
+    sequence(pair(1,2),pair(3,4)).filter(where key:greater_than(3))
+
+(pair has methods key and value)
+
+##### Regex
+
+You can use a regex predicate
+
+   sequence("apple","pear").filter(matches(/app/))
+   sequence(pair("apple",1),pair("pear",2)).filter(where(key:matches(/app/)))
+
+#### Custom Predicates
+
+Writing a custom predicate is very easy and there are 3 built in helpers:
+
+* simple_predicate
+* value predicate
+* self predicate
+
+##### simple_predicate
+
+For example:
+
+    def as_uppercase
+      simple_predicate(:as_uppercase, -> (v) { v.upcase })
+    end
+
+    sequence("apple","pear").map(as_uppercase) # returns ["APPLE","PEAR"]
+
+##### value_predicate
+
+For example:
+
+    def greater_than_or_equal_to(value)
+      value_predicate(:greater_than_or_equal_to,:>=,value)
+    end
+
+    sequence(1,2,3).filter(greater_than_or_equal_to 2)
+    sequence(1,2,3).filter(where is greater_than_or_equal_to 2)
+
+##### self_predicate
+
+For example:
+
+    def is_valid
+      self_predicate(:is_valid, :is_valid)
+    end
+
+    sequence(OpenStruct.new(is_valid:true,name:'apple'),OpenStruct.new(is_valid:false,name:'pear')).filter(is_valid).to_a
+    => [#<OpenStruct is_valid=true, name="apple">]
+
