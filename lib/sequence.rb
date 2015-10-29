@@ -85,6 +85,25 @@ module Sequences
       self.entries <=> object.entries
     end
 
+    def flat_map(predicate=nil, &block)
+      if predicate
+        Sequence.new(self) { |yielder, val|
+          val.each {|x|
+            v = predicate.is_a?(WherePredicate) ? WhereProcessor.new(x).apply(predicate.predicates) : predicate.exec.call(x)
+            yielder << v unless v.nil?
+          }
+        }
+      else
+        Sequence.new(self) { |yielder, val|
+          ary = block.call(val)
+          ary.each { |x|
+            yielder << x
+          }
+        }
+      end
+    end
+    alias collect_concat flat_map
+
     def map(predicate=nil, &block)
       if predicate
         Sequence.new(self) { |yielder, val|
@@ -210,17 +229,6 @@ module Sequences
         end
       }
     end
-
-    def flat_map(&block)
-      Sequence.new(self) { |yielder, val|
-        ary = block.call(val)
-        ary.each { |x|
-          yielder << x
-        }
-      }
-    end
-
-    alias collect_concat flat_map
 
     def zip(*args, &block)
       enums = [self] + args

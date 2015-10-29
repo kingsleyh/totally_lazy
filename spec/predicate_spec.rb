@@ -14,6 +14,14 @@ describe 'Predicates' do
     expect { sequence(pair(1,2),pair(3,4)).filter(odd).entries }.to raise_error(UnsupportedTypeException)
   end
 
+  it 'should support map' do
+    expect(sequence(1,2).map(as_string)).to eq(sequence("1","2"))
+  end
+
+  it 'should support flat_map' do
+    expect(sequence(sequence(1, 2), sequence(3, 4)).flat_map(as_string).to_a).to eq(sequence("1", "2", "3", "4").to_a)
+  end
+
   it 'should return content as string' do
     expect(sequence(1,2).map(as_string)).to eq(sequence("1","2"))
     expect(sequence(pair(1,2),pair(3,4)).map(as_string).entries).to eq([{'1'=>'2'},{'3'=>'4'}])
