@@ -55,7 +55,8 @@ describe 'Option' do
   end
 
   it 'should convert to sequence' do
-    expect(option(1).to_seq).to eq(sequence(option(1)))
+    expect(option(1).to_seq.to_a).to eq(sequence(1).to_a)
+    expect(none.to_seq).to eq(empty)
   end
 
   it 'should raise empty exception when calling get on none' do
@@ -84,10 +85,6 @@ describe 'Option' do
 
   it 'should raise exception in get_or_throw for none' do
     expect { option(empty).get_or_throw(Exception, 'oops') }.to raise_error(Exception)
-  end
-
-  it 'should return sequence for none' do
-    expect(option(empty).to_seq).to eq(sequence(none))
   end
 
   it 'should return false for contains for none' do

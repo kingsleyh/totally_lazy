@@ -64,7 +64,7 @@ module Option
     end
 
     def to_seq
-      sequence(self)
+      sequence(get)
     end
 
     def contains(item)
@@ -198,7 +198,7 @@ module Option
     end
 
     def to_seq
-      sequence(self)
+      empty
     end
 
     def contains(item)
