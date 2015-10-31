@@ -48,7 +48,7 @@ module Pair
     end
 
     def self.from_map(a_map)
-      sequence(a_map).map { |k, v| Pair.new(k, v) }
+      from_single(a_map).map { |k, v| Pair.new(k, v) }
     end
 
     def to_s

@@ -82,7 +82,7 @@ module Sequences
   end
 
   def deserialize(data)
-    sequence(data).deserialize
+    from_single(data).deserialize
   end
 
   class Sequence < Enumerator
