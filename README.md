@@ -119,23 +119,29 @@ You can use a regex predicate
    sequence("apple","pear").filter(matches(/app/))
    sequence(pair("apple",1),pair("pear",2)).filter(where(key:matches(/app/)))
 
-#### Custom Predicates
+#### Custom Transformer
 
-Writing a custom predicate is very easy and there are 3 built in helpers:
+There is a built in helper for a simple transform
 
-* simple_predicate
-* value predicate
-* self predicate
+* simple_transform
 
-##### simple_predicate
+##### simple_transform
 
 For example:
 
     def as_uppercase
-      simple_predicate(:as_uppercase, -> (v) { v.upcase })
+      simple_transform(:as_uppercase, -> (v) { v.upcase })
     end
 
     sequence("apple","pear").map(as_uppercase) # returns ["APPLE","PEAR"]
+
+
+#### Custom Predicates
+
+Writing a custom predicate is very easy and there are 3 built in helpers:
+
+* value predicate
+* self predicate
 
 ##### value_predicate
 
