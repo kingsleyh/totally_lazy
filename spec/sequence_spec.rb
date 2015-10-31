@@ -42,7 +42,7 @@ describe 'Sequence' do
   end
 
   it 'should lazily shuffle the elements - throws NoSuchElementException if empty' do
-    expect(sequence(1..50).shuffle.entries).not_to eq(sequence(1..50).entries)
+    expect(from_single(1..50).shuffle.entries).not_to eq(from_single(1..50).entries)
     expect { empty.shuffle.first }.to raise_error(NoSuchElementException)
   end
 
@@ -213,7 +213,7 @@ describe 'Sequence' do
   end
 
   it 'should convert sequence to a map' do
-    expect(sequence(oops('apple',1,'pear',2)).to_map).to eq({apple:1,pear:2})
+    expect(from_single(oops('apple',1,'pear',2)).to_map).to eq({apple:1,pear:2})
   end
 
   def oops(*values)

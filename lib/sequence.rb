@@ -30,7 +30,21 @@ module Sequences
   #   sequence(1,2,3).head_option # eagerly returns an option
   #   some(sequence(1,2,3)).get_or_else(empty) # eagerly returns value or else empty sequence
   #   sequence(1, 2, 3, 4, 5).filter(where(is greater_than 2).and(is odd)) # lazily returns 3,5
-  def sequence(*items)
+  # def sequence(*items)
+  #   if items.size == 1
+  #     if [Range, Hash, Array, Set].include?(items.first.class)
+  #       Sequence.new(items.first)
+  #     elsif items.first.nil?
+  #       empty
+  #     else
+  #       Sequence.new(items)
+  #     end
+  #   else
+  #     Sequence.new(items)
+  #   end
+  # end
+
+  def from_single(*items)
     if items.size == 1
       if [Range, Hash, Array, Set].include?(items.first.class)
         Sequence.new(items.first)
@@ -39,6 +53,15 @@ module Sequences
       else
         Sequence.new(items)
       end
+    else
+      Sequence.new(items)
+    end
+  end
+  module_function :from_single
+
+  def sequence(*items)
+    if items.first.nil?
+      empty
     else
       Sequence.new(items)
     end
