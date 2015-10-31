@@ -53,6 +53,11 @@ sequence(1, 2, 3, 4, 5).filter(where(is greater_than 2).and(is odd)) # lazily re
 sequence(pair(1, 2), pair(3, 4)).filter(where(key:odd)) # lazily returns 1,3
 ```
 
+#### Sequences
+
+* sequence wraps whatever is passed without modification - e.g. sequence([1,2,3]).head returns the array [1,2,3]
+* sequence1 modifies what is passed if it's a single item - e.g. sequence1([1,2,3]).head returns the first element of 1
+
 #### Generators
 
 There are 2 types of generators:
