@@ -70,8 +70,8 @@ module Predicates
     SelfPredicate.new(name,pred)
   end
 
-  def simple_predicate(name,exec)
-    SimplePredicate.new(name,exec)
+  def simple_transform(name,exec)
+    SimpleTransform.new(name,exec)
   end
 
 
@@ -110,7 +110,7 @@ module Predicates
 
   end
 
-  class SimplePredicate < Predicates::Predicate
+  class SimpleTransform < Predicates::Predicate
     attr_reader :name, :exec
 
     def initialize(name, exec)
