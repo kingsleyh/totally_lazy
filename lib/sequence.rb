@@ -44,7 +44,7 @@ module Sequences
   #   end
   # end
 
-  def from_single(*items)
+  def sequence1(*items)
     if items.size == 1
       if [Range, Hash, Array, Set].include?(items.first.class)
         Sequence.new(items.first)
@@ -57,7 +57,7 @@ module Sequences
       Sequence.new(items)
     end
   end
-  module_function :from_single
+  module_function :sequence1
 
   def sequence(*items)
     if items.first.nil?
@@ -82,7 +82,7 @@ module Sequences
   end
 
   def deserialize(data)
-    from_single(data).deserialize
+    sequence1(data).deserialize
   end
 
   class Sequence < Enumerator
