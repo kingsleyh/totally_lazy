@@ -118,10 +118,9 @@ module Sequences
         }
       else
         Sequence.new(self) { |yielder, val|
-          ary = block.call(val)
-          ary.each { |x|
-            yielder << x
-          }
+           val.each {|e|
+             yielder << block.call(e)
+           }
         }
       end
     end
