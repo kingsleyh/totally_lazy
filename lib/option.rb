@@ -67,6 +67,10 @@ module Option
       sequence(get)
     end
 
+    def to_seq1
+      sequence1(get)
+    end
+
     def contains(item)
       value == item
     end
@@ -79,47 +83,51 @@ module Option
       sequence(value) << target_sequence
     end
 
+    def each(&block)
+      @content.each(&block)
+     end
+
     def map(predicate=nil, &block)
-      as_option(sequence(@content).map(predicate, &block))
+      sequence(@content).map(predicate, &block)
     end
 
     alias collect map
 
     def select(predicate=nil, &block)
-      as_option(sequence(@content).select(predicate, &block))
+      sequence(@content).select(predicate, &block)
     end
 
     alias find_all select
     alias filter select
 
     def reject(predicate=nil, &block)
-      as_option(sequence(@content).reject(predicate, &block))
+      sequence(@content).reject(predicate, &block)
     end
 
     alias unfilter reject
 
     def grep(pattern)
-      as_option(sequence(@content).grep(pattern))
+      sequence(@content).grep(pattern)
     end
 
     def drop(n)
-      as_option(sequence(@content).drop(n))
+      sequence(@content).drop(n)
     end
 
     def drop_while(&block)
-      as_option(sequence(@content).drop_while(&block))
+      @content.drop_while(&block)
     end
 
     def take(n)
-      as_option(sequence(@content).take(n))
+      sequence(@content).take(n)
     end
 
     def take_while(&block)
-      as_option(sequence(@content).take_while(&block))
+      sequence(@content).take_while(&block)
     end
 
     def flat_map(&block)
-      as_option(sequence(@content).flat_map(&block))
+      sequence(@content).flat_map(&block)
     end
 
     alias collect_concat flat_map
@@ -201,6 +209,14 @@ module Option
       empty
     end
 
+    def to_seq1
+      empty
+    end
+
+    def each(&block)
+      empty
+    end
+
     def contains(item)
       false
     end
@@ -217,46 +233,46 @@ module Option
     alias << join
 
     def map(predicate=nil, &block)
-      none
+      empty
     end
 
     alias collect map
 
     def select(predicate=nil, &block)
-      none
+      empty
     end
 
     alias find_all select
     alias filter select
 
     def reject(predicate=nil, &block)
-      none
+      empty
     end
 
     alias unfilter reject
 
     def grep(pattern)
-      none
+      empty
     end
 
     def drop(n)
-      none
+      empty
     end
 
     def drop_while(&block)
-      none
+      empty
     end
 
     def take(n)
-      none
+      empty
     end
 
     def take_while(&block)
-      none
+      empty
     end
 
     def flat_map(&block)
-      none
+      empty
     end
 
     alias collect_concat flat_map

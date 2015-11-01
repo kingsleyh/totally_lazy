@@ -42,7 +42,7 @@ describe 'Sequence' do
   end
 
   it 'should lazily shuffle the elements - throws NoSuchElementException if empty' do
-    expect(sequence1(1..50).shuffle.entries).not_to eq(sequence1(1..50).entries)
+    expect(sequence(1..50).shuffle.entries).not_to eq(sequence(1..50).entries)
     expect { empty.shuffle.first }.to raise_error(NoSuchElementException)
   end
 
@@ -153,6 +153,7 @@ describe 'Sequence' do
 
   it 'should return all as flattened array' do
     expect(sequence(sequence(1, 2, 3),sequence(4,5,6)).all).to eq([1,2,3,4,5,6])
+    expect(sequence(sequence(1, 2, 3),sequence(4,5,6)).flatten).to eq([1,2,3,4,5,6])
   end
 
   it 'should iterate empty' do
@@ -214,7 +215,7 @@ describe 'Sequence' do
   end
 
   it 'should convert sequence to a map' do
-    expect(sequence1(oops('apple',1,'pear',2)).to_map).to eq({apple:1,pear:2})
+    expect(sequence(oops('apple',1,'pear',2)).to_map).to eq({apple:1,pear:2})
   end
 
   def oops(*values)

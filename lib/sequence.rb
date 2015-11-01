@@ -44,7 +44,7 @@ module Sequences
   #   end
   # end
 
-  def sequence1(*items)
+  def sequence(*items)
     if items.size == 1
       if [Range, Hash, Array, Set].include?(items.first.class)
         Sequence.new(items.first)
@@ -57,16 +57,14 @@ module Sequences
       Sequence.new(items)
     end
   end
-  module_function :sequence1
 
-  def sequence(*items)
+  def sequence1(*items)
     if items.first.nil?
       empty
     else
       Sequence.new(items)
     end
   end
-
 
   # Creates an empty sequence
   #
@@ -82,7 +80,7 @@ module Sequences
   end
 
   def deserialize(data)
-    sequence1(data).deserialize
+    sequence(data).deserialize
   end
 
   class Sequence < Enumerator
@@ -463,6 +461,7 @@ module Sequences
     def all
       to_a.flatten
     end
+    alias flatten all
 
     def sorting_by(*attr, &block)
       if attr.empty?
