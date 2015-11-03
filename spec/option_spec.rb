@@ -64,7 +64,7 @@ describe 'Option' do
   end
 
   it 'should convert to sequence' do
-    expect(option(1).to_seq.to_a).to eq(sequence(1).to_a)
+    expect(option(1).to_seq).to eq(sequence(1))
     expect(none.to_seq).to eq(empty)
   end
 
@@ -127,57 +127,58 @@ describe 'Option' do
   end
 
   it 'should support select' do
-    expect(option(2).filter(even)).to eq(sequence(2))
-    expect(option(2).find_all(even)).to eq(sequence(2))
-    expect(option(2).select(even)).to eq(sequence(2))
-    expect(option(2).filter(&:even?)).to eq(sequence(2))
-    expect(option(2).filter{|v| v == 2}).to eq(sequence(2))
-    expect(option(nil).filter(even)).to eq(empty)
+    expect(option(2).filter(even)).to eq(some(2))
+    expect(option(2).find_all(even)).to eq(some(2))
+    expect(option(2).select(even)).to eq(some(2))
+    expect(option(2).filter(&:even?)).to eq(some(2))
+    expect(option(2).filter{|v| v == 2}).to eq(some(2))
+    expect(option(nil).filter(even)).to eq(none)
   end
 
   it 'should support map' do
-    expect(option([{apple:1,pear:2},{melon:3}]).map{|h| h}).to eq([{apple:1,pear:2},{melon:3}])
-    expect(option(1).map(as_string)).to eq(sequence('1'))
-    expect(option(1).collect(as_string)).to eq(sequence('1'))
-    expect(option(sequence(1, 2, 3)).map { |s| s.entries }.to_a).to eq([[1, 2, 3]])
-    expect(option(1).map{|v| v+1}).to eq(sequence(2))
-    expect(option(nil).map(as_string)).to eq(empty)
+    expect(option([{apple:1,pear:2},{melon:3}]).map{|h| h}).to eq(some([{apple:1,pear:2},{melon:3}]))
+    expect(option({apple:1,pear:2})).to eq(some({apple:1,pear:2}))
+    expect(option(1).map(as_string)).to eq(some('1'))
+    expect(option(1).collect(as_string)).to eq(some('1'))
+    expect(option(sequence(1, 2, 3)).map { |s| s.entries }).to eq(some([1, 2, 3]))
+    expect(option(nil).map(as_string)).to eq(none)
   end
 
   it 'should support reject' do
-    expect(option(2).reject(odd)).to eq(sequence(2))
-    expect(option(2).unfilter(odd)).to eq(sequence(2))
-    expect(option(2).reject(&:odd?)).to eq(sequence(2))
-    expect(option(2).reject{|v| v == 1}).to eq(sequence(2))
-    expect(option(nil).reject(odd)).to eq(empty)
+    expect(option(2).reject(odd)).to eq(some(2))
+    expect(option(2).unfilter(odd)).to eq(some(2))
+    expect(option(2).reject(&:odd?)).to eq(some(2))
+    expect(option(2).reject{|v| v == 1}).to eq(some(2))
+    expect(option(nil).reject(odd)).to eq(none)
   end
 
   it 'should support grep' do
-    expect(option('apple').grep(/p/)).to eq(sequence('apple'))
-    expect(option(nil).grep(/p/)).to eq(empty)
+    expect(option('apple').grep(/p/)).to eq(some('apple'))
+    expect(option(nil).grep(/p/)).to eq(none)
   end
 
   it 'should support drop' do
-    expect(option(1).drop(1)).to eq(empty)
-    expect(option(nil).drop(1)).to eq(empty)
+    expect(option(1).drop(1)).to eq(none)
+    expect(option(nil).drop(1)).to eq(none)
   end
 
   it 'should support drop_while' do
-    expect(option(sequence(1,7)).drop_while { |n| n < 5 }).to eq(sequence(7))
-    expect(option(nil).drop_while { |n| n < 5 }).to eq(empty)
+    expect(option(sequence(1,7)).drop_while { |n| n < 5 }).to eq(some(1))
+    expect(option(nil).drop_while { |n| n < 5 }).to eq(none)
   end
 
   it 'should support take' do
-    expect(option(1).take(2)).to eq(sequence(1))
-    expect(option(nil).take(2)).to eq(empty)
+    expect(option(1).take(2)).to eq(some(1))
+    expect(option(nil).take(2)).to eq(none)
   end
 
   it 'should support take_while' do
-    expect(option(nil).take_while { |n| n < 5 }).to eq(empty)
+    expect(option(sequence(1,7)).take_while { |n| n < 5 }).to eq(some(1))
+    expect(option(nil).take_while { |n| n < 5 }).to eq(none)
   end
 
   it 'should support flat_map' do
-    expect(option(nil).flat_map{|v| v.first}).to eq(empty)
+    expect(option(nil).flat_map{|v| v.first}).to eq(none)
   end
 
 end

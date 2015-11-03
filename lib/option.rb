@@ -85,49 +85,49 @@ module Option
 
     def each(&block)
       @content.each(&block)
-     end
+    end
 
     def map(predicate=nil, &block)
-      sequence(@content).map(predicate, &block)
+      as_option(sequence(@content).map(predicate, &block))
     end
 
     alias collect map
 
     def select(predicate=nil, &block)
-      sequence(@content).select(predicate, &block)
+      as_option(sequence(@content).select(predicate, &block))
     end
 
     alias find_all select
     alias filter select
 
     def reject(predicate=nil, &block)
-      sequence(@content).reject(predicate, &block)
+      as_option(sequence(@content).reject(predicate, &block))
     end
 
     alias unfilter reject
 
     def grep(pattern)
-      sequence(@content).grep(pattern)
+      as_option(sequence(@content).grep(pattern))
     end
 
     def drop(n)
-      sequence(@content).drop(n)
+      as_option(sequence(@content).drop(n))
     end
 
     def drop_while(&block)
-      @content.drop_while(&block)
+      as_option(@content.drop_while(&block))
     end
 
     def take(n)
-      sequence(@content).take(n)
+      as_option(sequence(@content).take(n))
     end
 
     def take_while(&block)
-      sequence(@content).take_while(&block)
+      as_option(@content.take_while(&block))
     end
 
     def flat_map(&block)
-      sequence(@content).flat_map(&block)
+      as_option(sequence(@content).flat_map(&block))
     end
 
     alias collect_concat flat_map
@@ -233,46 +233,46 @@ module Option
     alias << join
 
     def map(predicate=nil, &block)
-      empty
+      none
     end
 
     alias collect map
 
     def select(predicate=nil, &block)
-      empty
+      none
     end
 
     alias find_all select
     alias filter select
 
     def reject(predicate=nil, &block)
-      empty
+      none
     end
 
     alias unfilter reject
 
     def grep(pattern)
-      empty
+      none
     end
 
     def drop(n)
-      empty
+      none
     end
 
     def drop_while(&block)
-      empty
+      none
     end
 
     def take(n)
-      empty
+      none
     end
 
     def take_while(&block)
-      empty
+      none
     end
 
     def flat_map(&block)
-      empty
+      none
     end
 
     alias collect_concat flat_map

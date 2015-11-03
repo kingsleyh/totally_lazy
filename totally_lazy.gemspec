@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Kingsley Hendrickse"]
-  s.date = "2015-11-01"
+  s.date = "2015-11-03"
   s.description = "Port of java functional library totally lazy to ruby"
   s.email = "kingsleyhendrickse@me.com"
   s.extra_rdoc_files = [
@@ -59,7 +59,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://github.com/kingsleyh/totally_lazy"
   s.licenses = ["MIT"]
-  s.rubygems_version = "2.2.2"
+  s.rubygems_version = "2.4.5.1"
   s.summary = "Port of java functional library totally lazy to ruby"
 
   if s.respond_to? :specification_version then
