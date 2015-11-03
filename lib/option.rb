@@ -39,6 +39,10 @@ module Option
       @content
     end
 
+    def head_option
+      as_option(sequence(@content))
+    end
+
     def value
       get
     end
@@ -268,6 +272,10 @@ module Option
     end
 
     def flat_map(&block)
+      none
+    end
+
+    def head_option
       none
     end
 

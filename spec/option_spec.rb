@@ -80,6 +80,11 @@ describe 'Option' do
     expect(option(empty).empty?).to eq(true)
   end
 
+  it 'should return a head option' do
+    expect(option({:name => 'apples'}).head_option).to eq(some({:name => 'apples'}))
+    expect(option(empty).head_option).to eq(none)
+  end
+
   it 'should return false for defined on none' do
     expect(option(empty).defined?).to eq(false)
   end
