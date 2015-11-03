@@ -7,6 +7,13 @@ end
 class UnsupportedMethodException < RuntimeError
 end
 
+# Array pimps
+class Array
+  def to_seq
+    sequence(self).flatten
+  end
+end
+
 module Sequences
 
   # Creates a sequence
@@ -45,25 +52,21 @@ module Sequences
   # end
 
   def sequence(*items)
-    if items.size == 1
-      if [Range, Hash, Array, Set].include?(items.first.class)
-        Sequence.new(items.first)
-      elsif items.first.nil?
-        empty
-      else
-        Sequence.new(items)
-      end
-    else
-      Sequence.new(items)
-    end
-  end
-
-  def sequence1(*items)
     if items.first.nil?
       empty
     else
       Sequence.new(items)
     end
+  end
+
+  def flatten
+    Sequence.new(entries.map do |entry|
+     if entry.respond_to?(:flatten)
+       entry.flatten
+     else
+       raise UnsupportedMethodException.new, "flatten is not supported by: #{self.entries.class}"
+     end
+   end.flatten)
   end
 
   # Creates an empty sequence
@@ -461,7 +464,6 @@ module Sequences
     def all
       to_a.flatten
     end
-    alias flatten all
 
     def sorting_by(*attr, &block)
       if attr.empty?
@@ -573,7 +575,8 @@ module Sequences
     end
 
     def deserializer(container, data)
-      data.each do |entry|
+      data.flatten.each do |entry|
+
         if entry.is_a?(Hash)
           if entry[:type] == :sequence
             data = []
@@ -590,8 +593,7 @@ module Sequences
           elsif entry[:type] == :none
             container << none
           elsif entry[:type] == Hash
-            h = entry[:values].map { |e| [e[:values]].to_h }.reduce({}) { |a, b| a.merge(b) }
-            container << h
+            container << entry[:values].map{|e| {e[:values].first => e[:values].last } }.reduce({}) { |a, b| a.merge(b) }
           else
             container << entry[:type].send(:new, entry[:values])
           end

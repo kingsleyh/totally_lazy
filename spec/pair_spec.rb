@@ -22,6 +22,7 @@ describe 'Pair' do
 
   it 'should convert to a sequence of pairs from a map' do
     expect(Pair.from_map({apples: '10'}).to_a).to eq(sequence(pair(:apples, '10')).to_a)
+    expect(Pair.from_map({:one => 1, :two => 2}).to_a).to eq(sequence(pair(:one,1),pair(:two,2)).to_a)
   end
 
   it 'should convert a pair to a map' do

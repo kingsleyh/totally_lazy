@@ -42,8 +42,13 @@ describe 'Sequence' do
   end
 
   it 'should lazily shuffle the elements - throws NoSuchElementException if empty' do
-    expect(sequence(1..50).shuffle.entries).not_to eq(sequence(1..50).entries)
+    expect(sequence((1..50).to_a).flatten.shuffle.entries).not_to eq(sequence((1..50).to_a).flatten.entries)
     expect { empty.shuffle.first }.to raise_error(NoSuchElementException)
+  end
+
+  it 'should flatten the content if possible' do
+    expect(sequence([1,2,3,[4,5,6]],[7,8,9]).flatten).to eq(sequence(1,2,3,4,5,6,7,8,9))
+    expect(sequence({:name => 'a', :age => 1},{:up => 2 }).flatten).to eq(sequence(:name,'a',:age,1,:up,2))
   end
 
   it 'should lazily join sequences together' do
@@ -153,7 +158,6 @@ describe 'Sequence' do
 
   it 'should return all as flattened array' do
     expect(sequence(sequence(1, 2, 3),sequence(4,5,6)).all).to eq([1,2,3,4,5,6])
-    expect(sequence(sequence(1, 2, 3),sequence(4,5,6)).flatten).to eq([1,2,3,4,5,6])
   end
 
   it 'should iterate empty' do
@@ -215,13 +219,12 @@ describe 'Sequence' do
   end
 
   it 'should convert sequence to a map' do
-    expect(sequence(oops('apple',1,'pear',2)).to_map).to eq({apple:1,pear:2})
+    expect(sequence('apple',1,'pear',2).to_map).to eq({apple:1,pear:2})
   end
 
-  def oops(*values)
-    values
+  it 'should convert from an array to a seq' do
+    expect([1,2,3].to_seq).to eq(sequence(1,2,3))
   end
-
 
 
 end

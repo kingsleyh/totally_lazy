@@ -67,10 +67,6 @@ module Option
       sequence(get)
     end
 
-    def to_seq1
-      sequence1(get)
-    end
-
     def contains(item)
       value == item
     end

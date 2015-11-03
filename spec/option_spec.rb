@@ -68,11 +68,6 @@ describe 'Option' do
     expect(none.to_seq).to eq(empty)
   end
 
-  it 'should convert to sequence1' do
-     expect(option([1,2,3]).to_seq1).to eq(sequence1([1,2,3]))
-     expect(none.to_seq1).to eq(empty)
-  end
-
   it 'should raise empty exception when calling get on none' do
     expect { option(empty).get }.to raise_error(NoSuchElementException)
   end

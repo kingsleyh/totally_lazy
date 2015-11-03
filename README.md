@@ -55,8 +55,9 @@ sequence(pair(1, 2), pair(3, 4)).filter(where(key:odd)) # lazily returns 1,3
 
 #### Sequences
 
-* sequence modifies what is passed if it's a single item - e.g. sequence1([1,2,3]).head returns the first element of 1
-* sequence1 wraps whatever is passed without modification - e.g. sequence([1,2,3]).head returns the array [1,2,3]
+* sequence wraps whatever is passed without modification - e.g. sequence([1,2,3]).head returns the array [1,2,3]
+* if you have a single array you can [1,2,3].to_seq which returns a flattened sequence - e.g. [1,2,3].to_seq.head returns 1
+* you can also do sequence([1,2,3]).flatten to get sequence([1,2,3]).flatten.head returns 1
 
 #### Generators
 
