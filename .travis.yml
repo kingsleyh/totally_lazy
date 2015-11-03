@@ -4,3 +4,4 @@ rvm:
 deploy:
   provider: rubygems
   api_key: "58c7669125f604b8a8c421f3481a1d7a"
+sudo: false
