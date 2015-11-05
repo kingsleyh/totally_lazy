@@ -30,12 +30,12 @@ describe 'Option' do
   end
 
   it 'should support each' do
-    result = []
-    option(sequence(1,2,3)).each{|i| result << i+1}
-    expect(result).to eq([2,3,4])
-    result = []
-    option(none).each{|i| result << i+1}
-    expect(result).to eq([])
+    result = 0
+    option(1).each{|i| result=i+1}
+    expect(result).to eq(2)
+    result=0
+    none.each{|i| result=100}
+    expect(result).to eq(0)
   end
 
   it 'should get or else' do

@@ -22,7 +22,6 @@ module Option
       raise(Exception, 'some cannot be nil') if @content.nil?
     end
 
-
     def <=>(object)
       self.state <=> object.state
     end
@@ -84,7 +83,7 @@ module Option
     end
 
     def each(&block)
-      @content.each(&block)
+      block.call(@content)
     end
 
     def map(predicate=nil, &block)
@@ -165,6 +164,10 @@ module Option
       @content = content
     end
 
+    # def entries
+    #   []
+    # end
+    #
     def <=>(object)
       self.state <=> object.state
     end

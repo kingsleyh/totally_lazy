@@ -99,6 +99,7 @@ describe 'Sequence' do
     expect(sequence(sequence(1, 2), sequence(3, 4)).flat_map { |s| s+1 }).to eq(sequence(2, 3, 4, 5))
     expect(sequence(sequence(1, 2), sequence(3, 4)).flat_map { |s| s }).to eq(sequence(1, 2, 3, 4))
     expect(sequence(pair(1, 2), pair(3, 4)).flat_map { |s| s }).to eq(sequence(1, 2, 3, 4))
+    expect(sequence(some(1),none,some(2)).flat_map { |s| s }).to eq(sequence(1,2))
   end
 
   it 'should support zip' do
