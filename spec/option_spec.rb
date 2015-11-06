@@ -179,6 +179,9 @@ describe 'Option' do
 
   it 'should support flat_map' do
     expect(option(nil).flat_map{|v| v.first}).to eq(none)
+    # TODO: Fix these test cases
+    # expect(option(1).flat_map{|v| none}).to eq(none)
+    # expect(option(1).flat_map{|v| some(2)}).to eq(some(2))
   end
 
 end
