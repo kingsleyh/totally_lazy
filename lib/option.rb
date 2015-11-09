@@ -125,8 +125,12 @@ module Option
       as_option(@content.take_while(&block))
     end
 
+    def flatten
+      @content
+    end
+
     def flat_map(&block)
-      as_option(sequence(@content).flat_map(&block))
+      some(block.call(@content)).flatten
     end
 
     alias collect_concat flat_map
@@ -271,6 +275,10 @@ module Option
     end
 
     def take_while(&block)
+      none
+    end
+
+    def flatten
       none
     end
 
