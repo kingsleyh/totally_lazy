@@ -1,4 +1,4 @@
-# PLEASE NOTE - This project is not being actively maintained at the moment - I am taking a break - not sure when I will return.
+# PLEASE NOTE - This project is no longer being actively maintained. It has now been moved to https://github.com/raymanoz/totally_lazy
 
 # Totally Lazy for Ruby
 
@@ -6,11 +6,8 @@ This is a port of the java functional library [Totally Lazy](https://code.google
 
 ### Status
 
-[![Build Status](https://travis-ci.org/kingsleyh/totally_lazy.svg?branch=master)](https://travis-ci.org/kingsleyh/totally_lazy)
-[![Gem Version](https://badge.fury.io/rb/totally_lazy.svg)](http://badge.fury.io/rb/totally_lazy)
-[![Stories in Ready](https://badge.waffle.io/kingsleyh/totally_lazy.svg?label=ready&title=Ready)](http://waffle.io/kingsleyh/totally_lazy)
-[![Coverage Status](https://coveralls.io/repos/kingsleyh/totally_lazy/badge.png?branch=master)](https://coveralls.io/r/kingsleyh/totally_lazy?branch=master)
-[![Inline docs](http://inch-ci.org/github/kingsleyh/totally_lazy.png?branch=master)](http://inch-ci.org/github/kingsleyh/totally_lazy)
+DEAD! Do not use.
+
 ### Summary
 
 * Tries to be as lazy as possible
